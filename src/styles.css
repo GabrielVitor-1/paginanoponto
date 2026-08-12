@@ -137,7 +137,17 @@ nav a {
 
 nav .nav-contact {
   display: inline-flex;
-  border-bottom: 2px solid var(--graphite);
+  gap: 0.45rem;
+  padding-inline: 0.75rem;
+  border: 1px solid color-mix(in srgb, var(--serra) 45%, transparent);
+  border-radius: 4px;
+  background: var(--paper);
+  color: var(--serra);
+}
+
+.nav-contact svg {
+  width: 1.15rem;
+  fill: #25d366;
 }
 
 .hero {
@@ -653,6 +663,34 @@ h3 {
   overflow-wrap: anywhere;
   color: #e3eeee;
   font-size: 0.94rem;
+}
+
+.whatsapp-float {
+  position: fixed;
+  z-index: 30;
+  right: max(1rem, env(safe-area-inset-right));
+  bottom: max(1rem, env(safe-area-inset-bottom));
+  display: grid;
+  width: 3.5rem;
+  height: 3.5rem;
+  place-items: center;
+  border: 2px solid var(--paper);
+  border-radius: 50%;
+  background: #25d366;
+  box-shadow: 0 0.35rem 1rem rgb(32 35 33 / 25%);
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.whatsapp-float:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0.55rem 1.25rem rgb(32 35 33 / 30%);
+}
+
+.whatsapp-float svg {
+  width: 1.8rem;
+  fill: var(--paper);
 }
 
 footer {
