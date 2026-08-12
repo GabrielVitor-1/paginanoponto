@@ -601,7 +601,7 @@ h3 {
 }
 
 .trust-photo {
-  width: min(13rem, 58vw);
+  width: min(6.75rem, 32vw);
   aspect-ratio: 3 / 4;
   margin: 0;
   overflow: hidden;
@@ -789,7 +789,7 @@ footer {
   }
 
   .trust-layout {
-    grid-template-columns: 13rem minmax(0, 1fr);
+    grid-template-columns: 6.75rem minmax(0, 1fr);
     align-items: start;
   }
 }
