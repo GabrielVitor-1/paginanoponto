@@ -16,7 +16,8 @@ Google Meu Negocio e indicacoes. A maioria acessara pelo celular e decide pela c
 2. Problema explicado sem jargao tecnico.
 3. Processo real em tres ou quatro passos.
 4. Demonstracao clara do que o cliente recebe.
-5. Tres faixas de preco: Essencial, Completo e Premium.
+5. Tres possibilidades de projeto: Essencial, Completo e Premium, com valor definido depois do
+   alinhamento de escopo.
 6. Credibilidade baseada na presenca local de Gabriel e na possibilidade de visita presencial.
 7. CTA final e rodape simples.
 
@@ -34,5 +35,5 @@ Google Meu Negocio e indicacoes. A maioria acessara pelo celular e decide pela c
 - Numero de WhatsApp com DDD.
 - Mensagem inicial aprovada para o link `wa.me`.
 - Fotos reais de Gabriel, Pirenopolis ou do processo de trabalho, caso disponiveis.
-- Confirmacao dos precos finais e do que cada pacote inclui.
+- Confirmacao final do que cada pacote inclui.
 - Dominio e plataforma de publicacao.
