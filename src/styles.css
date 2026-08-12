@@ -683,23 +683,19 @@ h3 {
   width: 3.5rem;
   height: 3.5rem;
   place-items: center;
-  border: 1px solid var(--stone);
-  border-radius: 6px;
-  background: var(--paper);
-  box-shadow: 0 0.35rem 1rem rgb(32 35 33 / 25%);
-  transition:
-    transform 180ms ease,
-    box-shadow 180ms ease;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  transition: transform 180ms ease;
 }
 
 .whatsapp-float:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 0.55rem 1.25rem rgb(32 35 33 / 30%);
+  transform: translateY(-2px) scale(1.04);
 }
 
 .whatsapp-float img {
-  width: 2.65rem;
-  height: 2.65rem;
+  width: 3.25rem;
+  height: 3.25rem;
   object-fit: contain;
 }
 
