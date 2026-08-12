@@ -194,7 +194,7 @@ h1 {
   max-width: 13ch;
   margin-bottom: 1.5rem;
   font-family: var(--display);
-  font-size: clamp(2.08rem, 8.5vw, 4.6rem);
+  font-size: clamp(2.16rem, 8.8vw, 4.85rem);
   line-height: 1.01;
   text-wrap: balance;
 }
@@ -218,7 +218,7 @@ h3 {
   max-width: 35rem;
   margin-bottom: 1.75rem;
   color: var(--graphite-soft);
-  font-size: clamp(1.1rem, 3vw, 1.3rem);
+  font-size: clamp(1.02rem, 2.5vw, 1.18rem);
   overflow-wrap: anywhere;
 }
 
@@ -247,6 +247,12 @@ h3 {
   stroke-width: 2;
 }
 
+.button img {
+  width: 1.45rem;
+  height: 1.45rem;
+  object-fit: contain;
+}
+
 .button:hover {
   transform: translateY(-2px);
 }
@@ -258,12 +264,6 @@ h3 {
 
 .button-primary:hover {
   background: #dcb34a;
-}
-
-.button-note {
-  margin: 0.7rem 0 0;
-  color: var(--graphite-soft);
-  font-size: 0.88rem;
 }
 
 .discovery {
@@ -683,9 +683,9 @@ h3 {
   width: 3.5rem;
   height: 3.5rem;
   place-items: center;
-  border: 2px solid var(--paper);
-  border-radius: 50%;
-  background: #25d366;
+  border: 1px solid var(--stone);
+  border-radius: 6px;
+  background: var(--paper);
   box-shadow: 0 0.35rem 1rem rgb(32 35 33 / 25%);
   transition:
     transform 180ms ease,
@@ -697,9 +697,10 @@ h3 {
   box-shadow: 0 0.55rem 1.25rem rgb(32 35 33 / 30%);
 }
 
-.whatsapp-float svg {
-  width: 1.8rem;
-  fill: var(--paper);
+.whatsapp-float img {
+  width: 2.65rem;
+  height: 2.65rem;
+  object-fit: contain;
 }
 
 footer {
