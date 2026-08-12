@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://gabrielvitor-1.github.io/paginanoponto/sitemap.xml

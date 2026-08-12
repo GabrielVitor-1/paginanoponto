@@ -25,6 +25,10 @@ npm.cmd run build
 Cada push na branch `main` valida e publica a pasta `dist` pelo GitHub Pages. A configuração
 está em `.github/workflows/deploy-pages.yml`.
 
+- Página pública: `https://gabrielvitor-1.github.io/paginanoponto/`
+- Link curto para divulgação: `https://bit.ly/paginanoponto`
+- O link curto não deve ser usado como URL canônica ou no sitemap.
+
 ## Estrutura
 
 - `index.html`: documento e metadados da pagina
