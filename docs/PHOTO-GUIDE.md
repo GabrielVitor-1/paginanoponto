@@ -1,9 +1,9 @@
 # Foto pessoal
 
-## Objetivo
+## Estado
 
-Substituir o monograma `GV` na seção "Por que falar comigo" por uma foto real de Gabriel. A
-imagem deve funcionar como prova de presença pessoal, não como decoração.
+A foto foi incorporada em `public/gabriel-vitor-retrato.jpg`. A edição preserva fisionomia,
+roupa e ambiente, com apenas enquadramento e iluminação ajustados.
 
 ## Foto recomendada
 
