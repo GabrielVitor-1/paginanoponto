@@ -103,6 +103,10 @@ a {
   gap: 1rem;
 }
 
+.header-inner > * {
+  min-width: 0;
+}
+
 .brand {
   display: inline-grid;
   text-decoration: none;
@@ -115,6 +119,7 @@ a {
 }
 
 .brand span {
+  display: none;
   color: var(--graphite-soft);
   font-family: var(--utility);
   font-size: 0.76rem;
@@ -668,8 +673,8 @@ h3 {
 .whatsapp-float {
   position: fixed;
   z-index: 30;
-  right: max(1rem, env(safe-area-inset-right));
-  bottom: max(1rem, env(safe-area-inset-bottom));
+  right: max(1rem, calc(env(safe-area-inset-right) + 0.5rem));
+  bottom: max(1rem, calc(env(safe-area-inset-bottom) + 0.5rem));
   display: grid;
   width: 3.5rem;
   height: 3.5rem;
@@ -718,6 +723,10 @@ footer {
 
   nav a {
     display: inline-flex;
+  }
+
+  .brand span {
+    display: block;
   }
 
   .hero-grid,
