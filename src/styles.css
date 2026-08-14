@@ -150,9 +150,10 @@ nav .nav-contact {
   color: var(--serra);
 }
 
-.nav-contact svg {
-  width: 1.15rem;
-  fill: #25d366;
+.nav-contact img {
+  width: 1.25rem;
+  height: 1.25rem;
+  object-fit: contain;
 }
 
 .hero {
