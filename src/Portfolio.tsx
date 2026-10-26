@@ -99,7 +99,7 @@ export default function Portfolio() {
                     href={project.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    aria-label={`Abrir o site de ${project.name} em nova aba`}
+                    aria-label={`Visitar site: abrir o site de ${project.name} em nova aba`}
                   >
                     <span>Visitar site</span>
                     <svg aria-hidden="true" viewBox="0 0 16 16">
@@ -116,7 +116,7 @@ export default function Portfolio() {
           href={whatsappUrl}
           target="_blank"
           rel="noopener noreferrer"
-          aria-label="Conversar pelo WhatsApp sobre uma página para meu negócio"
+          aria-label="Quero uma página para meu negócio: abrir conversa pelo WhatsApp"
         >
           Quero uma página para meu negócio
         </a>

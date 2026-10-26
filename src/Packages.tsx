@@ -76,7 +76,7 @@ export default function Packages() {
               href={item.url}
               target="_blank"
               rel="noopener noreferrer"
-              aria-label={`Conversar pelo WhatsApp sobre o pacote ${item.name}`}
+              aria-label={`Quero entender o ${item.name}: abrir conversa pelo WhatsApp`}
             >
               Quero entender o {item.name}
             </a>

@@ -14,7 +14,7 @@ const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matc
 
 function PageAtmosphere() {
   useEffect(() => {
-    if (reducedMotion) return;
+    if (reducedMotion || window.matchMedia("(width < 42rem)").matches) return;
 
     const root = document.documentElement;
     let frame = 0;
@@ -67,7 +67,8 @@ function PageMotion() {
   useEffect(() => {
     const heroTitle = document.querySelector<HTMLHeadingElement>(".hero-copy > h1");
     const titleWords: HTMLSpanElement[] = [];
-    if (heroTitle && !heroTitle.dataset.split) {
+    const compactViewport = window.matchMedia("(width < 42rem)").matches;
+    if (heroTitle && !compactViewport && !heroTitle.dataset.split) {
       const words = heroTitle.textContent?.trim().split(/\s+/) ?? [];
       heroTitle.textContent = "";
       words.forEach((word, index) => {
@@ -88,7 +89,7 @@ function PageMotion() {
       ".hero-copy > .eyebrow, .hero-copy > .hero-lead, .hero-copy > .button",
     );
     const sections = gsap.utils.toArray<HTMLElement>(".reveal");
-    if (reducedMotion) {
+    if (reducedMotion || compactViewport) {
       gsap.set([...heroItems, ...titleWords, ...sections], { autoAlpha: 1, y: 0 });
       return;
     }
@@ -98,31 +99,31 @@ function PageMotion() {
         .fromTo(
           ".hero-copy > .eyebrow",
           { autoAlpha: 0, y: 10 },
-          { autoAlpha: 1, y: 0, duration: 0.32, ease: "power2.out" },
+          { autoAlpha: 1, y: 0, duration: 0.22, ease: "power2.out" },
         )
         .fromTo(
           titleWords,
           { autoAlpha: 0, y: 14 },
-          { autoAlpha: 1, y: 0, duration: 0.4, ease: "power2.out", stagger: 0.045 },
+          { autoAlpha: 1, y: 0, duration: 0.24, ease: "power2.out", stagger: 0.025 },
           "-=0.08",
         )
         .fromTo(
           ".hero-copy > .hero-lead, .hero-copy > .button",
           { autoAlpha: 0, y: 10 },
-          { autoAlpha: 1, y: 0, duration: 0.35, ease: "power2.out", stagger: 0.08 },
-          "-=0.12",
+          { autoAlpha: 1, y: 0, duration: 0.24, ease: "power2.out", stagger: 0.06 },
+          "-=0.08",
         )
         .fromTo(
           ".discovery",
           { autoAlpha: 0, y: 12 },
-          { autoAlpha: 1, y: 0, duration: 0.35, ease: "power2.out" },
-          "-=0.32",
+          { autoAlpha: 1, y: 0, duration: 0.24, ease: "power2.out" },
+          "-=0.2",
         )
         .fromTo(
           ".discovery li",
           { autoAlpha: 0, y: 8 },
-          { autoAlpha: 1, y: 0, duration: 0.24, ease: "power2.out", stagger: 0.06 },
-          "-=0.12",
+          { autoAlpha: 1, y: 0, duration: 0.18, ease: "power2.out", stagger: 0.04 },
+          "-=0.08",
         );
       sections.forEach((section) => {
         gsap.fromTo(
@@ -162,7 +163,7 @@ function ScrollStates() {
     if (reducedMotion) return;
 
     const targets = document.querySelectorAll<HTMLElement>(
-      ".process-list li, .sample-page, .package-card, .package-included",
+      ".process-list li, .sample-page, .portfolio-card, .package-card, .package-included",
     );
     const observer = new IntersectionObserver(
       (entries) => {
@@ -200,7 +201,7 @@ function HeroSegments() {
             href={linkWhats(whatsappMessages[key])}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label={`Conversar pelo WhatsApp sobre uma página para ${label.toLowerCase()}`}
+            aria-label={`${label}: conversar pelo WhatsApp sobre uma página para ${label.toLowerCase()}`}
           >
             {label}
           </a>
@@ -218,7 +219,7 @@ function App() {
     document.querySelectorAll<HTMLAnchorElement>("[data-whatsapp-message]").forEach((link) => {
       const key = link.dataset.whatsappMessage as WhatsAppMessage;
       link.href = linkWhats(whatsappMessages[key]);
-      link.setAttribute("aria-label", `Abrir conversa pelo WhatsApp: ${link.textContent?.trim()}`);
+      link.setAttribute("aria-label", `${link.textContent?.trim()}: abrir conversa pelo WhatsApp`);
     });
   }, []);
   return (
