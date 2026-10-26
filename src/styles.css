@@ -121,10 +121,11 @@ a {
 }
 
 .site-header {
-  position: relative;
+  position: sticky;
   z-index: 10;
-  border-bottom: 1px solid var(--linha);
-  background: rgb(28 29 24 / 92%);
+  top: 0;
+  padding-top: 0.65rem;
+  transition: transform var(--duration-base) var(--ease-standard);
 }
 
 .page-atmosphere {
@@ -188,10 +189,25 @@ footer {
 
 .header-inner {
   display: flex;
-  min-height: 5.25rem;
+  min-height: 4.5rem;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
+  padding-inline: 1rem;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  background: rgb(28 29 24 / 78%);
+  backdrop-filter: blur(0.75rem);
+  transition:
+    border-color var(--duration-base) var(--ease-standard),
+    background-color var(--duration-base) var(--ease-standard),
+    box-shadow var(--duration-base) var(--ease-standard);
+}
+
+.site-header.is-scrolled .header-inner {
+  border-color: rgb(198 215 211 / 40%);
+  background: rgb(28 29 24 / 92%);
+  box-shadow: var(--shadow-sm);
 }
 
 .header-inner > * {
@@ -222,12 +238,35 @@ nav {
 }
 
 nav a {
+  position: relative;
   display: none;
   min-height: 44px;
   align-items: center;
   font-size: 0.94rem;
   font-weight: 500;
   text-decoration: none;
+  transition: color var(--duration-fast) var(--ease-standard);
+}
+
+nav a:not(.nav-contact)::after {
+  position: absolute;
+  bottom: 0.65rem;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--accent-areia);
+  content: "";
+  transition: width var(--duration-fast) var(--ease-standard);
+}
+
+nav a:not(.nav-contact):hover,
+nav a:not(.nav-contact):focus-visible {
+  color: var(--accent-areia);
+}
+
+nav a:not(.nav-contact):hover::after,
+nav a:not(.nav-contact):focus-visible::after {
+  width: 100%;
 }
 
 nav .nav-contact {
@@ -292,6 +331,11 @@ h1 {
   font-size: clamp(2.35rem, 8.3vw, 5rem);
   line-height: 1.06;
   text-wrap: balance;
+}
+
+.hero-word {
+  display: inline-block;
+  will-change: transform, opacity;
 }
 
 h2 {
@@ -426,6 +470,9 @@ h3 {
 .button-primary {
   background: var(--telha);
   color: var(--caicacao);
+  box-shadow:
+    0 0 0 1px rgb(232 181 74 / 35%),
+    0 0.75rem 1.75rem rgb(200 90 42 / 20%);
 }
 
 .button-primary:hover {
@@ -436,7 +483,10 @@ h3 {
   align-self: end;
   padding: 1.5rem;
   border: 1px solid var(--linha);
-  background: rgb(35 36 32 / 92%);
+  border-radius: var(--radius-md);
+  background: var(--surface-glass);
+  box-shadow: var(--shadow-sm);
+  backdrop-filter: blur(0.5rem);
 }
 
 .discovery-title {
@@ -1390,6 +1440,12 @@ footer {
 
   .page-atmosphere-glow {
     transform: none;
+    transition: none;
+  }
+
+  .header-inner,
+  nav a,
+  nav a::after {
     transition: none;
   }
 }

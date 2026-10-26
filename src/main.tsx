@@ -65,20 +65,53 @@ function PageAtmosphere() {
 
 function PageMotion() {
   useEffect(() => {
+    const heroTitle = document.querySelector<HTMLHeadingElement>(".hero-copy > h1");
+    const titleWords: HTMLSpanElement[] = [];
+    if (heroTitle && !heroTitle.dataset.split) {
+      const words = heroTitle.textContent?.trim().split(/\s+/) ?? [];
+      heroTitle.textContent = "";
+      words.forEach((word, index) => {
+        const span = document.createElement("span");
+        span.className = "hero-word";
+        span.textContent = word;
+        heroTitle.append(span);
+        titleWords.push(span);
+        if (index < words.length - 1) heroTitle.append(" ");
+      });
+      heroTitle.dataset.split = "true";
+    }
+    heroTitle
+      ?.querySelectorAll<HTMLSpanElement>(".hero-word")
+      .forEach((word) => titleWords.push(word));
+
     const heroItems = gsap.utils.toArray<HTMLElement>(
-      ".hero-copy > .eyebrow, .hero-copy > h1, .hero-copy > .hero-lead, .hero-copy > .button",
+      ".hero-copy > .eyebrow, .hero-copy > .hero-lead, .hero-copy > .button",
     );
     const sections = gsap.utils.toArray<HTMLElement>(".reveal");
     if (reducedMotion) {
-      gsap.set([...heroItems, ...sections], { autoAlpha: 1, y: 0 });
+      gsap.set([...heroItems, ...titleWords, ...sections], { autoAlpha: 1, y: 0 });
       return;
     }
     const context = gsap.context(() => {
-      gsap.fromTo(
-        heroItems,
-        { autoAlpha: 0, y: 12 },
-        { autoAlpha: 1, y: 0, duration: 0.42, ease: "power2.out", stagger: 0.1 },
-      );
+      const heroTimeline = gsap.timeline();
+      heroTimeline
+        .fromTo(
+          ".hero-copy > .eyebrow",
+          { autoAlpha: 0, y: 10 },
+          { autoAlpha: 1, y: 0, duration: 0.32, ease: "power2.out" },
+        )
+        .fromTo(
+          titleWords,
+          { autoAlpha: 0, y: 14 },
+          { autoAlpha: 1, y: 0, duration: 0.4, ease: "power2.out", stagger: 0.045 },
+          "-=0.08",
+        )
+        .fromTo(
+          ".hero-copy > .hero-lead, .hero-copy > .button",
+          { autoAlpha: 0, y: 10 },
+          { autoAlpha: 1, y: 0, duration: 0.35, ease: "power2.out", stagger: 0.08 },
+          "-=0.12",
+        );
       sections.forEach((section) => {
         gsap.fromTo(
           section,
@@ -95,6 +128,20 @@ function PageMotion() {
     });
     return () => context.revert();
   }, []);
+  return null;
+}
+
+function HeaderState() {
+  useEffect(() => {
+    const header = document.querySelector<HTMLElement>(".site-header");
+    if (!header) return;
+
+    const update = () => header.classList.toggle("is-scrolled", window.scrollY > 12);
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    return () => window.removeEventListener("scroll", update);
+  }, []);
+
   return null;
 }
 
@@ -143,6 +190,7 @@ function App() {
       {packagesRoot && createPortal(<Packages />, packagesRoot)}
       {heroSegmentsRoot && createPortal(<HeroSegments />, heroSegmentsRoot)}
       <PageAtmosphere />
+      <HeaderState />
       <PageMotion />
     </>
   );
