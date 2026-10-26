@@ -49,6 +49,18 @@ export default function Packages() {
           <article
             className={`package-card${item.featured ? " package-card-featured" : ""}`}
             key={item.name}
+            onPointerMove={(event) => {
+              if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+              const bounds = event.currentTarget.getBoundingClientRect();
+              const rotateX = ((event.clientY - bounds.top) / bounds.height - 0.5) * -2;
+              const rotateY = ((event.clientX - bounds.left) / bounds.width - 0.5) * 2;
+              event.currentTarget.style.setProperty("--tilt-x", `${rotateX.toFixed(2)}deg`);
+              event.currentTarget.style.setProperty("--tilt-y", `${rotateY.toFixed(2)}deg`);
+            }}
+            onPointerLeave={(event) => {
+              event.currentTarget.style.removeProperty("--tilt-x");
+              event.currentTarget.style.removeProperty("--tilt-y");
+            }}
           >
             {item.featured && <p className="package-badge">Mais escolhido</p>}
             <p className="package-for">Para quem é</p>
@@ -64,7 +76,7 @@ export default function Packages() {
               href={item.url}
               target="_blank"
               rel="noopener noreferrer"
-              aria-label={`Conversar pelo WhatsApp sobre o pacote ${item.name}`}
+              aria-label={`Quero entender o ${item.name}: abrir conversa pelo WhatsApp`}
             >
               Quero entender o {item.name}
             </a>

@@ -59,7 +59,12 @@ const projects: Project[] = [
 export default function Portfolio() {
   const whatsappUrl = linkWhats(whatsappMessages.geral);
   return (
-    <section className="section portfolio" id="trabalhos" aria-labelledby="trabalhos-titulo">
+    <section
+      className="section portfolio"
+      id="trabalhos"
+      aria-labelledby="trabalhos-titulo"
+      data-atmosphere="portfolio"
+    >
       <div className="container">
         <div className="portfolio-heading reveal">
           <p className="section-label">Páginas que já entreguei</p>
@@ -94,7 +99,7 @@ export default function Portfolio() {
                     href={project.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    aria-label={`Abrir o site de ${project.name} em nova aba`}
+                    aria-label={`Visitar site: abrir o site de ${project.name} em nova aba`}
                   >
                     <span>Visitar site</span>
                     <svg aria-hidden="true" viewBox="0 0 16 16">
@@ -111,7 +116,7 @@ export default function Portfolio() {
           href={whatsappUrl}
           target="_blank"
           rel="noopener noreferrer"
-          aria-label="Conversar pelo WhatsApp sobre uma página para meu negócio"
+          aria-label="Quero uma página para meu negócio: abrir conversa pelo WhatsApp"
         >
           Quero uma página para meu negócio
         </a>
