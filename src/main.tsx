@@ -3,6 +3,10 @@ import { createRoot } from "react-dom/client";
 import { createPortal } from "react-dom";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { setupAnalytics } from "./analytics";
+import { content } from "./content";
+import ExampleShowcase from "./ExampleShowcase";
+import FAQ from "./FAQ";
 import Portfolio from "./Portfolio";
 import Packages from "./Packages";
 import { linkWhats, whatsappMessages, type WhatsAppMessage } from "./whatsapp";
@@ -202,6 +206,8 @@ function HeroSegments() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label={`${label}: conversar pelo WhatsApp sobre uma página para ${label.toLowerCase()}`}
+            data-evento="whatsapp_click"
+            data-evento-local="hero"
           >
             {label}
           </a>
@@ -215,18 +221,32 @@ function App() {
   const portfolioRoot = document.getElementById("portfolio-root");
   const packagesRoot = document.getElementById("packages-root");
   const heroSegmentsRoot = document.getElementById("hero-segments-root");
+  const examplesRoot = document.getElementById("examples-root");
+  const faqRoot = document.getElementById("faq-root");
   useEffect(() => {
     document.querySelectorAll<HTMLAnchorElement>("[data-whatsapp-message]").forEach((link) => {
       const key = link.dataset.whatsappMessage as WhatsAppMessage;
       link.href = linkWhats(whatsappMessages[key]);
       link.setAttribute("aria-label", `${link.textContent?.trim()}: abrir conversa pelo WhatsApp`);
     });
+    const promise = document.getElementById("hero-promise");
+    if (promise && content.respostaPromessa) {
+      promise.textContent = content.respostaPromessa;
+      promise.hidden = false;
+    }
+    const deadline = document.getElementById("process-step-4-copy");
+    if (deadline && content.prazoPublicacao) {
+      deadline.textContent = `Aprovou? A página entra no ar em ${content.prazoPublicacao} e o link já pode ir para a bio, para o Google e para o WhatsApp.`;
+    }
+    return setupAnalytics();
   }, []);
   return (
     <>
       {portfolioRoot && createPortal(<Portfolio />, portfolioRoot)}
       {packagesRoot && createPortal(<Packages />, packagesRoot)}
       {heroSegmentsRoot && createPortal(<HeroSegments />, heroSegmentsRoot)}
+      {examplesRoot && createPortal(<ExampleShowcase />, examplesRoot)}
+      {faqRoot && createPortal(<FAQ />, faqRoot)}
       <PageAtmosphere />
       <HeaderState />
       <PageMotion />
