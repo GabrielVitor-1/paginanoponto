@@ -3,7 +3,6 @@ import { createRoot } from "react-dom/client";
 import { createPortal } from "react-dom";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { createAurora } from "./aurora.js";
 import Portfolio from "./Portfolio";
 import Packages from "./Packages";
 import { linkWhats, whatsappMessages, type WhatsAppMessage } from "./whatsapp";
@@ -12,14 +11,6 @@ import "./styles.css";
 gsap.registerPlugin(ScrollTrigger);
 
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-function Aurora() {
-  useEffect(() => {
-    const target = document.querySelector<HTMLElement>(".hero-light");
-    return target ? createAurora(target, { reducedMotion }) : undefined;
-  }, []);
-  return null;
-}
 
 function PageMotion() {
   useEffect(() => {
@@ -100,7 +91,6 @@ function App() {
       {portfolioRoot && createPortal(<Portfolio />, portfolioRoot)}
       {packagesRoot && createPortal(<Packages />, packagesRoot)}
       {heroSegmentsRoot && createPortal(<HeroSegments />, heroSegmentsRoot)}
-      <Aurora />
       <PageMotion />
     </>
   );
