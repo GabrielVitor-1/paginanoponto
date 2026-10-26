@@ -1,4 +1,5 @@
 import { linkWhats, whatsappMessages } from "./whatsapp";
+import { content } from "./content";
 
 const packages = [
   {
@@ -10,6 +11,7 @@ const packages = [
       "Um botão claro para iniciar a conversa",
     ],
     url: linkWhats(whatsappMessages.essencial),
+    price: content.precoEssencial,
   },
   {
     name: "Completo",
@@ -21,6 +23,7 @@ const packages = [
     ],
     url: linkWhats(whatsappMessages.completo),
     featured: true,
+    price: content.precoCompleto,
   },
   {
     name: "Premium",
@@ -28,9 +31,10 @@ const packages = [
     deliveries: [
       "Conteúdo do Instagram junto das informações principais",
       "Pedidos de agendamento ou reserva sem começar tudo do zero no WhatsApp",
-      "Estrutura preparada para apresentar melhor o negócio nas buscas pelo nome e pela região",
+      "Ajustes para o negócio ser encontrado mais fácil quando alguém pesquisa o nome ou a região",
     ],
     url: linkWhats(whatsappMessages.premium),
+    price: content.precoPremium,
   },
 ];
 
@@ -62,9 +66,12 @@ export default function Packages() {
               event.currentTarget.style.removeProperty("--tilt-y");
             }}
           >
-            {item.featured && <p className="package-badge">Mais escolhido</p>}
+            {content.pacoteDestaque === item.name && (
+              <p className="package-badge">Indicado para a maioria</p>
+            )}
             <p className="package-for">Para quem é</p>
             <h3>{item.name}</h3>
+            {item.price && <p className="package-price">A partir de R$ {item.price}</p>}
             <p className="package-summary">{item.audience}</p>
             <ul>
               {item.deliveries.map((delivery) => (
@@ -77,6 +84,8 @@ export default function Packages() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label={`Quero entender o ${item.name}: abrir conversa pelo WhatsApp`}
+              data-evento="whatsapp_click"
+              data-evento-local={`pacote_${item.name.toLowerCase()}`}
             >
               Quero entender o {item.name}
             </a>

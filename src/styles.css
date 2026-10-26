@@ -217,7 +217,9 @@ footer {
 }
 
 .brand {
-  display: inline-grid;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.35rem;
   text-decoration: none;
 }
 
@@ -227,8 +229,12 @@ footer {
   line-height: 1.1;
 }
 
-.brand span {
-  display: none;
+.brand-dot {
+  color: var(--accent-areia);
+}
+
+.brand > span {
+  display: inline;
   color: var(--ardosia-suave);
   font-size: 0.77rem;
 }
@@ -363,6 +369,12 @@ h3 {
 
 .hero-segments {
   margin-top: 1.25rem;
+}
+
+.hero-promise {
+  margin: 0.75rem 0 0;
+  color: var(--text-muted);
+  font-size: 0.9rem;
 }
 
 .hero-segments p {
@@ -923,6 +935,13 @@ h3 {
   font-weight: 500;
 }
 
+.package-price {
+  margin: -0.75rem 0 1.25rem;
+  color: var(--accent-areia);
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
 .package-card ul {
   margin: 0 0 1.5rem;
   padding: 0;
@@ -1200,6 +1219,41 @@ h3 {
   color: var(--caicacao);
 }
 
+.faq {
+  border-top: 1px solid var(--linha);
+  background: rgb(28 29 24 / 95%);
+}
+
+.faq-inner {
+  max-width: 48rem;
+}
+
+.faq-list {
+  border-top: 1px solid var(--border-subtle);
+}
+
+.faq details {
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.faq summary {
+  min-height: 44px;
+  padding: 1rem 2rem 1rem 0;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.faq details p {
+  max-width: 60ch;
+  padding-bottom: 1rem;
+  color: var(--text-muted);
+}
+
+.examples-caption {
+  max-width: 42rem;
+  color: var(--text-muted);
+}
+
 .final-cta-inner {
   position: relative;
   z-index: 1;
@@ -1374,8 +1428,8 @@ footer,
     display: inline-flex;
   }
 
-  .brand span {
-    display: block;
+  .brand > span {
+    display: inline;
   }
 
   .hero-grid,

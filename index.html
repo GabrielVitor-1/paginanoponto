@@ -5,18 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Páginas para pousadas, lojas, salões, oficinas e outros negócios locais."
+      content="Uma página simples com fotos, horário, endereço e WhatsApp para pousadas, restaurantes, passeios e lojas de Pirenópolis e região. Peça pelo WhatsApp."
     />
-    <meta name="theme-color" content="#f1eee3" />
+    <meta name="theme-color" content="#1c1d18" />
     <meta name="author" content="Gabriel Vitor" />
     <meta name="robots" content="index, follow, max-image-preview:large" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
     <link rel="canonical" href="https://gabrielvitor-1.github.io/paginanoponto/" />
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
-    <meta property="og:title" content="Gabriel Vitor | Páginas para negócios locais" />
+    <meta
+      property="og:title"
+      content="Página no Ponto: o link do seu negócio, pronto para mandar"
+    />
     <meta
       property="og:description"
-      content="Páginas para pousadas, lojas, salões, oficinas e outros negócios locais."
+      content="Fotos, horário, endereço e WhatsApp num só link. Para negócios de Pirenópolis e região."
     />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="pt_BR" />
@@ -28,18 +31,24 @@
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:image:type" content="image/png" />
-    <meta property="og:image:alt" content="Gabriel Vitor — páginas para negócios locais" />
+    <meta
+      property="og:image:alt"
+      content="Página no Ponto, criação de site para negócios em Pirenópolis"
+    />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Gabriel Vitor | Páginas para negócios locais" />
+    <meta
+      name="twitter:title"
+      content="Página no Ponto: o link do seu negócio, pronto para mandar"
+    />
     <meta
       name="twitter:description"
-      content="Páginas para pousadas, lojas, salões, oficinas e outros negócios locais."
+      content="Fotos, horário, endereço e WhatsApp num só link. Para negócios de Pirenópolis e região."
     />
     <meta
       name="twitter:image"
       content="https://gabrielvitor-1.github.io/paginanoponto/compartilhamento-gv.png"
     />
-    <title>Gabriel Vitor | Páginas para negócios locais</title>
+    <title>Página no Ponto | Criação de site para negócios em Pirenópolis</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -49,15 +58,37 @@
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
-        "@type": "Person",
-        "name": "Gabriel Vitor",
+        "@type": "ProfessionalService",
+        "name": "Página no Ponto",
         "url": "https://gabrielvitor-1.github.io/paginanoponto/",
-        "description": "Páginas para pousadas, lojas, salões, oficinas e outros negócios locais.",
+        "description": "Uma página simples com fotos, horário, endereço e WhatsApp para pousadas, restaurantes, passeios e lojas de Pirenópolis e região. Peça pelo WhatsApp.",
+        "founder": {
+          "@type": "Person",
+          "name": "Gabriel Vitor"
+        },
         "email": "mailto:gabrielvitorcontato1@gmail.com",
         "telephone": "+55 62 99371-7831",
-        "areaServed": {
-          "@type": "Country",
-          "name": "Brasil"
+        "areaServed": [
+          {
+            "@type": "City",
+            "name": "Pirenópolis",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Pirenópolis",
+              "addressRegion": "GO",
+              "addressCountry": "BR"
+            }
+          },
+          {
+            "@type": "AdministrativeArea",
+            "name": "Região de Pirenópolis"
+          }
+        ],
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Pirenópolis",
+          "addressRegion": "GO",
+          "addressCountry": "BR"
         },
         "knowsAbout": ["Landing pages", "Páginas para pequenos negócios", "Presença digital local"]
       }
@@ -69,9 +100,9 @@
 
     <header class="site-header">
       <div class="container header-inner">
-        <a class="brand" href="#inicio" aria-label="Gabriel Vitor, início">
-          <strong>Gabriel Vitor</strong>
-          <span>páginas para negócios locais</span>
+        <a class="brand" href="#inicio" aria-label="Página no Ponto, início">
+          <strong>Página no Ponto<span class="brand-dot">.</span></strong>
+          <span>por Gabriel Vitor</span>
         </a>
         <nav aria-label="Navegação principal">
           <a href="#como-funciona">Como funciona</a>
@@ -95,22 +126,27 @@
       <section class="hero" id="inicio" data-atmosphere="hero">
         <div class="container hero-grid">
           <div class="hero-copy">
-            <p class="eyebrow hero-enter hero-enter-1">Páginas para negócios locais</p>
-            <h1>Fim de semana cheio. Tenha um link pronto para apresentar seu negócio.</h1>
+            <p class="eyebrow hero-enter hero-enter-1">
+              Páginas para negócios de Pirenópolis e região
+            </p>
+            <h1>Onde fica? Que horas abre? Tem foto? Responda tudo com um link.</h1>
             <p class="hero-lead hero-enter hero-enter-3">
-              Em vez de responder as mesmas perguntas no WhatsApp, envie uma página com fotos,
-              horários, localização e contato. A pessoa olha e decide se quer conhecer.
+              Eu monto a página do seu negócio com fotos, horário, localização e um botão de
+              WhatsApp. Você põe na bio e manda para quem perguntar.
             </p>
             <a
               class="button button-primary hero-enter hero-enter-4"
               href="#"
               data-whatsapp-message="geral"
+              data-evento="whatsapp_click"
+              data-evento-local="hero"
               target="_blank"
               rel="noopener noreferrer"
             >
               <img src="./contact-sketch.png" alt="" width="24" height="24" />
               Quero meu link pronto
             </a>
+            <p class="hero-promise" id="hero-promise" hidden></p>
             <div id="hero-segments-root"></div>
           </div>
 
@@ -130,13 +166,12 @@
         <div class="container split-copy reveal">
           <div>
             <p class="section-label">O que acontece hoje</p>
-            <h2 id="problema-titulo">Quem procura pelo celular decide rápido.</h2>
+            <h2 id="problema-titulo">No feriado, o turista decide rápido onde vai.</h2>
           </div>
           <div class="body-copy">
             <p>
-              Compara lugares, olha as fotos e escolhe. Se precisa procurar horário em uma postagem,
-              endereço no Google e preço pelo WhatsApp, pode acabar escolhendo outro lugar antes de
-              falar com você.
+              Ele compara lugares pelo celular. Se o horário está num post, o endereço no Google e o
+              preço só no WhatsApp, ele escolhe o lugar que respondeu primeiro.
             </p>
             <p>
               Um link resolve essa procura. Coloque na bio, envie pelo WhatsApp e use sempre que
@@ -170,7 +205,7 @@
             <li class="reveal">
               <span>02</span>
               <h3>Você envia o que já tem</h3>
-              <p>
+              <p id="process-step-4-copy">
                 Pode mandar fotos, horários, endereço e formas de contato. Não precisa preparar
                 apresentação.
               </p>
@@ -232,6 +267,8 @@
           </article>
         </div>
       </section>
+
+      <div id="examples-root"></div>
 
       <div id="portfolio-root"></div>
 
@@ -323,8 +360,8 @@
                     <li>Conteúdo do Instagram junto das informações principais</li>
                     <li>Pedidos de agendamento ou reserva sem começar tudo do zero no WhatsApp</li>
                     <li>
-                      Estrutura preparada para apresentar melhor o negócio nas buscas pelo nome e
-                      pela região
+                      Ajustes para o negócio ser encontrado mais fácil quando alguém pesquisa o nome
+                      ou a região
                     </li>
                   </ul>
                 </td>
@@ -342,6 +379,8 @@
           </table>
         </div>
       </section>
+
+      <div id="faq-root"></div>
 
       <section class="section trust" aria-labelledby="confianca-titulo" data-atmosphere="trust">
         <div class="container trust-layout reveal">
@@ -373,6 +412,8 @@
               class="trust-button"
               href="#"
               data-whatsapp-message="cidade"
+              data-evento="whatsapp_click"
+              data-evento-local="pirenopolis"
               target="_blank"
               rel="noopener noreferrer"
               >Quero conversar sobre meu negócio</a
@@ -396,6 +437,8 @@
             class="button button-light"
             href="#"
             data-whatsapp-message="escolha"
+            data-evento="whatsapp_click"
+            data-evento-local="final"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -406,10 +449,10 @@
           </a>
           <a
             class="email-link"
-            href="https://mail.google.com/mail/?view=cm&fs=1&to=gabrielvitorcontato1@gmail.com&su=Quero%20uma%20p%C3%A1gina%20para%20meu%20neg%C3%B3cio&body=Ol%C3%A1!%20Quero%20conversar%20sobre%20uma%20p%C3%A1gina%20para%20o%20meu%20neg%C3%B3cio."
-            target="_blank"
-            rel="noopener noreferrer"
-            >Prefere e-mail? Fale pelo Gmail</a
+            href="mailto:gabrielvitorcontato1@gmail.com?subject=Quero%20uma%20p%C3%A1gina%20para%20o%20meu%20neg%C3%B3cio"
+            data-evento="email_click"
+            data-evento-local="final"
+            >Prefere e-mail? Escreva para gabrielvitorcontato1@gmail.com</a
           >
         </div>
       </section>
@@ -417,7 +460,7 @@
 
     <footer>
       <div class="container footer-inner">
-        <p><strong>Gabriel Vitor</strong> · páginas para negócios locais</p>
+        <p><strong>Página no Ponto</strong> · Gabriel Vitor · Pirenópolis, Goiás</p>
         <p>© <span data-current-year>2026</span></p>
       </div>
     </footer>
@@ -426,6 +469,8 @@
       class="whatsapp-float"
       href="#"
       data-whatsapp-message="geral"
+      data-evento="whatsapp_click"
+      data-evento-local="hero"
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Abrir atendimento pelo WhatsApp"
