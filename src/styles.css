@@ -583,14 +583,24 @@ h3 {
 
 .process-list {
   display: grid;
+  gap: 0.75rem;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
 .process-list li {
-  padding: 1.5rem 0;
-  border-top: 1px solid rgb(241 238 227 / 20%);
+  min-height: 100%;
+  padding: 1.5rem;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  background: rgb(35 36 32 / 58%);
+  transition: transform var(--duration-base) var(--ease-enter);
+}
+
+.process-list li.is-active {
+  box-shadow: var(--shadow-glow);
+  transform: translate3d(0, -0.2rem, 0);
 }
 
 .process-list li > span {
@@ -644,7 +654,14 @@ h3 {
 .sample-page {
   overflow: hidden;
   border: 1px solid var(--linha);
-  background: #232420;
+  border-radius: var(--radius-md);
+  background: var(--surface-glass);
+  transition: transform var(--duration-base) var(--ease-enter);
+}
+
+.sample-page.is-active {
+  box-shadow: var(--shadow-glow);
+  transform: translate3d(0, -0.2rem, 0);
 }
 
 .sample-page figure {
@@ -859,7 +876,16 @@ h3 {
   flex-direction: column;
   padding: 1.5rem;
   border: 1px solid var(--esquadria);
-  background: #232420;
+  border-radius: var(--radius-md);
+  background: var(--surface-glass);
+  transform: perspective(56rem) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+  transition:
+    transform var(--duration-base) var(--ease-enter),
+    border-color var(--duration-fast) var(--ease-standard);
+}
+
+.package-card.is-active {
+  box-shadow: var(--shadow-glow);
 }
 
 .package-card-featured {
@@ -929,6 +955,14 @@ h3 {
   margin-top: 1rem;
   padding: 1.25rem;
   border: 1px solid var(--esquadria);
+  border-radius: var(--radius-md);
+  background: rgb(35 36 32 / 46%);
+  transition: transform var(--duration-base) var(--ease-enter);
+}
+
+.package-included.is-active {
+  box-shadow: var(--shadow-sm);
+  transform: translate3d(0, -0.15rem, 0);
 }
 
 .package-included > p {
@@ -1398,8 +1432,7 @@ footer {
   }
 
   .process-list li + li {
-    padding-left: 2rem;
-    border-left: 1px solid rgb(241 238 227 / 20%);
+    padding-left: 1.5rem;
   }
 }
 
@@ -1445,7 +1478,11 @@ footer {
 
   .header-inner,
   nav a,
-  nav a::after {
+  nav a::after,
+  .process-list li,
+  .sample-page,
+  .package-card,
+  .package-included {
     transition: none;
   }
 }

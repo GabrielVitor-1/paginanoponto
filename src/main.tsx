@@ -111,6 +111,18 @@ function PageMotion() {
           { autoAlpha: 0, y: 10 },
           { autoAlpha: 1, y: 0, duration: 0.35, ease: "power2.out", stagger: 0.08 },
           "-=0.12",
+        )
+        .fromTo(
+          ".discovery",
+          { autoAlpha: 0, y: 12 },
+          { autoAlpha: 1, y: 0, duration: 0.35, ease: "power2.out" },
+          "-=0.32",
+        )
+        .fromTo(
+          ".discovery li",
+          { autoAlpha: 0, y: 8 },
+          { autoAlpha: 1, y: 0, duration: 0.24, ease: "power2.out", stagger: 0.06 },
+          "-=0.12",
         );
       sections.forEach((section) => {
         gsap.fromTo(
@@ -140,6 +152,31 @@ function HeaderState() {
     update();
     window.addEventListener("scroll", update, { passive: true });
     return () => window.removeEventListener("scroll", update);
+  }, []);
+
+  return null;
+}
+
+function ScrollStates() {
+  useEffect(() => {
+    if (reducedMotion) return;
+
+    const targets = document.querySelectorAll<HTMLElement>(
+      ".process-list li, .sample-page, .package-card, .package-included",
+    );
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add("is-active");
+          observer.unobserve(entry.target);
+        });
+      },
+      { threshold: 0.2, rootMargin: "0px 0px -8%" },
+    );
+
+    targets.forEach((target) => observer.observe(target));
+    return () => observer.disconnect();
   }, []);
 
   return null;
@@ -192,6 +229,7 @@ function App() {
       <PageAtmosphere />
       <HeaderState />
       <PageMotion />
+      <ScrollStates />
     </>
   );
 }
