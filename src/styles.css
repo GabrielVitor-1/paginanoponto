@@ -1,4 +1,5 @@
 :root {
+  /* Cores */
   --caicacao: #f1eee3;
   --ardosia: #1c1d18;
   --ardosia-suave: #8b9184;
@@ -7,10 +8,35 @@
   --ipe: #e8b54a;
   --musgo: #8b9184;
   --linha: rgb(31 74 69 / 85%);
+  --surface-base: #1c1d18;
+  --surface-raised: #232420;
+  --surface-glass: rgb(35 36 32 / 88%);
+  --text-primary: #f1eee3;
+  --text-muted: #b9b9ae;
+  --accent-petroleo: #1f4a45;
+  --accent-terra: #c85a2a;
+  --accent-areia: #e8b54a;
+  --border-subtle: rgb(198 215 211 / 28%);
+
+  /* Tipografia e composição */
   --display: "Bitter", georgia, serif;
   --body: "Work Sans", arial, sans-serif;
   --container: 72rem;
   --section-space: clamp(4rem, 8vw, 7rem);
+  --radius-sm: 0.45rem;
+  --radius-md: 0.8rem;
+  --radius-lg: 1.25rem;
+  --shadow-sm: 0 0.35rem 1rem rgb(0 0 0 / 12%);
+  --shadow-md: 0 1rem 2.5rem rgb(0 0 0 / 18%);
+  --shadow-glow: 0 1rem 3rem rgb(31 74 69 / 16%);
+
+  /* Movimento */
+  --duration-fast: 150ms;
+  --duration-base: 220ms;
+  --duration-slow: 500ms;
+  --ease-standard: cubic-bezier(0.2, 0.65, 0.3, 1);
+  --ease-enter: cubic-bezier(0.16, 1, 0.3, 1);
+  --atmosphere-scroll: 0;
 
   color: var(--caicacao);
   background: var(--ardosia);
@@ -33,7 +59,7 @@ body {
   overflow-x: hidden;
   font-size: 1rem;
   line-height: 1.6;
-  background: var(--ardosia);
+  background: var(--surface-base);
 }
 
 html,
@@ -98,6 +124,66 @@ a {
   position: relative;
   z-index: 10;
   border-bottom: 1px solid var(--linha);
+  background: rgb(28 29 24 / 92%);
+}
+
+.page-atmosphere {
+  position: fixed;
+  z-index: 0;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.page-atmosphere-glow {
+  position: absolute;
+  display: block;
+  width: min(90vw, 70rem);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  opacity: 0.42;
+  will-change: transform, opacity;
+  transition: opacity var(--duration-slow) var(--ease-standard);
+}
+
+.page-atmosphere-glow-one {
+  top: -30rem;
+  right: -34rem;
+  background: radial-gradient(
+    circle,
+    rgb(31 74 69 / 42%) 0%,
+    rgb(31 74 69 / 10%) 38%,
+    transparent 68%
+  );
+  transform: translate3d(0, calc(var(--atmosphere-scroll) * -8vh), 0);
+}
+
+.page-atmosphere-glow-two {
+  bottom: -37rem;
+  left: -35rem;
+  background: radial-gradient(
+    circle,
+    rgb(200 90 42 / 24%) 0%,
+    rgb(232 181 74 / 8%) 42%,
+    transparent 69%
+  );
+  transform: translate3d(0, calc(var(--atmosphere-scroll) * 10vh), 0);
+}
+
+:root[data-atmosphere="process"] .page-atmosphere-glow-one,
+:root[data-atmosphere="portfolio"] .page-atmosphere-glow-one {
+  opacity: 0.62;
+}
+
+:root[data-atmosphere="pricing"] .page-atmosphere-glow-two,
+:root[data-atmosphere="contact"] .page-atmosphere-glow-two {
+  opacity: 0.6;
+}
+
+main,
+footer {
+  position: relative;
+  z-index: 1;
 }
 
 .header-inner {
@@ -164,20 +250,7 @@ nav .nav-contact {
   isolation: isolate;
   overflow: hidden;
   padding-block: clamp(3rem, 8vw, 6.5rem);
-  background: var(--ardosia);
-}
-
-.hero-light {
-  position: absolute;
-  z-index: 0;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-}
-
-.hero-light-static {
-  background: radial-gradient(ellipse at 50% 46%, rgb(200 90 42 / 22%), transparent 62%);
+  background: rgb(28 29 24 / 94%);
 }
 
 .hero-grid {
@@ -424,7 +497,7 @@ h3 {
 .problem,
 .trust {
   border-top: 1px solid var(--linha);
-  background: var(--ardosia);
+  background: rgb(28 29 24 / 95%);
 }
 
 .split-copy,
@@ -446,7 +519,7 @@ h3 {
 }
 
 .process {
-  background: var(--ardosia);
+  background: rgb(28 29 24 / 94%);
   color: var(--caicacao);
 }
 
@@ -579,12 +652,12 @@ h3 {
 
 .pricing {
   border-top: 1px solid var(--linha);
-  background: var(--ardosia);
+  background: rgb(28 29 24 / 95%);
 }
 
 .portfolio {
   border-top: 1px solid var(--linha);
-  background: var(--ardosia);
+  background: rgb(28 29 24 / 95%);
 }
 
 .portfolio-heading {
@@ -1021,7 +1094,7 @@ h3 {
   isolation: isolate;
   overflow: hidden;
   padding-block: var(--section-space);
-  background: var(--ardosia);
+  background: rgb(28 29 24 / 94%);
   color: var(--caicacao);
 }
 
@@ -1124,7 +1197,7 @@ a {
 footer {
   padding-block: 1.5rem;
   border-top: 1px solid var(--linha);
-  background: var(--ardosia);
+  background: rgb(28 29 24 / 96%);
   color: var(--ardosia-suave);
 }
 
@@ -1141,11 +1214,11 @@ footer {
 }
 
 .reveal {
-  opacity: 0;
-  transform: translateY(8px);
+  opacity: 1;
+  transform: none;
   transition:
-    opacity 300ms ease-out,
-    transform 300ms ease-out;
+    opacity var(--duration-base) var(--ease-standard),
+    transform var(--duration-base) var(--ease-standard);
 }
 
 .reveal.is-visible {
@@ -1312,6 +1385,11 @@ footer {
   }
 
   .trust-button {
+    transition: none;
+  }
+
+  .page-atmosphere-glow {
+    transform: none;
     transition: none;
   }
 }

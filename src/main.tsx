@@ -12,6 +12,57 @@ gsap.registerPlugin(ScrollTrigger);
 
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+function PageAtmosphere() {
+  useEffect(() => {
+    if (reducedMotion) return;
+
+    const root = document.documentElement;
+    let frame = 0;
+    const updateScroll = () => {
+      const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = scrollableHeight > 0 ? window.scrollY / scrollableHeight : 0;
+      root.style.setProperty("--atmosphere-scroll", progress.toFixed(4));
+      frame = 0;
+    };
+    const scheduleScrollUpdate = () => {
+      if (!frame) frame = window.requestAnimationFrame(updateScroll);
+    };
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const active = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((first, second) => second.intersectionRatio - first.intersectionRatio)[0];
+        if (active)
+          root.dataset.atmosphere = active.target.getAttribute("data-atmosphere") ?? "base";
+      },
+      { threshold: [0.35, 0.6] },
+    );
+
+    document
+      .querySelectorAll<HTMLElement>("[data-atmosphere]")
+      .forEach((section) => observer.observe(section));
+    updateScroll();
+    window.addEventListener("scroll", scheduleScrollUpdate, { passive: true });
+    window.addEventListener("resize", scheduleScrollUpdate, { passive: true });
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+      observer.disconnect();
+      window.removeEventListener("scroll", scheduleScrollUpdate);
+      window.removeEventListener("resize", scheduleScrollUpdate);
+      root.style.removeProperty("--atmosphere-scroll");
+      delete root.dataset.atmosphere;
+    };
+  }, []);
+
+  return (
+    <div className="page-atmosphere" aria-hidden="true">
+      <span className="page-atmosphere-glow page-atmosphere-glow-one" />
+      <span className="page-atmosphere-glow page-atmosphere-glow-two" />
+    </div>
+  );
+}
+
 function PageMotion() {
   useEffect(() => {
     const heroItems = gsap.utils.toArray<HTMLElement>(
@@ -91,6 +142,7 @@ function App() {
       {portfolioRoot && createPortal(<Portfolio />, portfolioRoot)}
       {packagesRoot && createPortal(<Packages />, packagesRoot)}
       {heroSegmentsRoot && createPortal(<HeroSegments />, heroSegmentsRoot)}
+      <PageAtmosphere />
       <PageMotion />
     </>
   );

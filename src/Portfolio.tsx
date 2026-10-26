@@ -59,7 +59,12 @@ const projects: Project[] = [
 export default function Portfolio() {
   const whatsappUrl = linkWhats(whatsappMessages.geral);
   return (
-    <section className="section portfolio" id="trabalhos" aria-labelledby="trabalhos-titulo">
+    <section
+      className="section portfolio"
+      id="trabalhos"
+      aria-labelledby="trabalhos-titulo"
+      data-atmosphere="portfolio"
+    >
       <div className="container">
         <div className="portfolio-heading reveal">
           <p className="section-label">Páginas que já entreguei</p>
