@@ -1,0 +1,17 @@
+{
+  "name": "Página no Ponto",
+  "icons": [
+    {
+      "src": "./icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#1C1D18",
+  "background_color": "#1C1D18"
+}
