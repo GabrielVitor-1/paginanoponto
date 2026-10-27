@@ -290,7 +290,7 @@ nav .nav-contact {
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  padding-block: clamp(3rem, 8vw, 6.5rem);
+  padding-block: clamp(3rem, 7vw, 5.5rem);
   background: rgb(28 29 24 / 94%);
 }
 
@@ -359,42 +359,6 @@ h3 {
   margin-bottom: 1.75rem;
   color: var(--ardosia-suave);
   font-size: clamp(1.03rem, 2.5vw, 1.17rem);
-}
-
-.hero-segments {
-  margin-top: 1.25rem;
-}
-
-.hero-segments p {
-  margin-bottom: 0.6rem;
-  color: var(--ardosia-suave);
-  font-size: 0.9rem;
-}
-
-.hero-segments > div {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.hero-segments a {
-  display: inline-flex;
-  min-height: 44px;
-  align-items: center;
-  padding: 0.45rem 0.7rem;
-  border: 1px solid var(--esquadria);
-  color: var(--caicacao);
-  font-size: 0.88rem;
-  font-weight: 500;
-  text-decoration: none;
-  transition:
-    border-color 180ms ease,
-    background-color 180ms ease;
-}
-
-.hero-segments a:hover {
-  border-color: var(--telha);
-  background: rgb(200 90 42 / 16%);
 }
 
 .hero-enter {
@@ -1386,7 +1350,7 @@ footer,
 
   .hero-grid {
     align-items: end;
-    gap: clamp(3rem, 7vw, 6rem);
+    gap: clamp(2.5rem, 5vw, 4.5rem);
   }
 
   .discovery ol {
