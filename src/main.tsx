@@ -183,38 +183,9 @@ function ScrollStates() {
   return null;
 }
 
-function HeroSegments() {
-  const segments = [
-    ["Pousada", "pousada"],
-    ["Loja", "loja"],
-    ["Salão", "salao"],
-    ["Oficina", "oficina"],
-    ["Turismo", "turismo"],
-  ] as const;
-  return (
-    <div className="hero-segments">
-      <p>Qual é o seu negócio?</p>
-      <div>
-        {segments.map(([label, key]) => (
-          <a
-            key={key}
-            href={linkWhats(whatsappMessages[key])}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={`${label}: conversar pelo WhatsApp sobre uma página para ${label.toLowerCase()}`}
-          >
-            {label}
-          </a>
-        ))}
-      </div>
-    </div>
-  );
-}
-
 function App() {
   const portfolioRoot = document.getElementById("portfolio-root");
   const packagesRoot = document.getElementById("packages-root");
-  const heroSegmentsRoot = document.getElementById("hero-segments-root");
   useEffect(() => {
     document.querySelectorAll<HTMLAnchorElement>("[data-whatsapp-message]").forEach((link) => {
       const key = link.dataset.whatsappMessage as WhatsAppMessage;
@@ -226,7 +197,6 @@ function App() {
     <>
       {portfolioRoot && createPortal(<Portfolio />, portfolioRoot)}
       {packagesRoot && createPortal(<Packages />, packagesRoot)}
-      {heroSegmentsRoot && createPortal(<HeroSegments />, heroSegmentsRoot)}
       <PageAtmosphere />
       <HeaderState />
       <PageMotion />
