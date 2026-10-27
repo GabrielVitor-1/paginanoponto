@@ -720,6 +720,12 @@ h3 {
   margin-bottom: 2rem;
 }
 
+.portfolio-heading > p:not(.section-label) {
+  max-width: 38rem;
+  margin-top: 1rem;
+  color: var(--ardosia-suave);
+}
+
 .portfolio-grid {
   display: grid;
   gap: 1rem;
@@ -792,7 +798,7 @@ h3 {
 }
 
 .portfolio-card li {
-  color: var(--ardosia-suave);
+  color: #b4b9ac;
   opacity: 0.95;
 }
 
@@ -851,8 +857,31 @@ h3 {
   }
 }
 
-.portfolio-cta {
+.proof-strip {
+  display: flex;
+  gap: 1.25rem;
+  align-items: center;
+  justify-content: space-between;
   margin-top: 2rem;
+  padding: 1.25rem;
+  border: 1px dashed var(--esquadria);
+  border-radius: var(--radius-md);
+  background: var(--surface-glass);
+}
+
+.proof-strip p {
+  margin: 0;
+}
+
+.proof-strip-title {
+  color: var(--caicacao);
+  font-weight: 600;
+}
+
+.proof-strip-copy {
+  margin-top: 0.2rem !important;
+  color: #b4b9ac;
+}
 }
 
 .pricing-heading {
@@ -1445,6 +1474,15 @@ footer,
 }
 
 @media (width < 42rem) {
+  .proof-strip {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .proof-strip .button {
+    width: 100%;
+  }
+
   .page-atmosphere-glow {
     opacity: 0.24;
   }
