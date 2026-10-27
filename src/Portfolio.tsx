@@ -29,7 +29,7 @@ const projects: Project[] = [
       "O atendimento em três passos simples",
       "Conversa direta pelo WhatsApp",
     ],
-    image: "/portfolio/q-cachos.webp",
+    image: "portfolio/q-cachos.webp",
     imageAlt: "Imagem de apresentação do site Q Cachos",
   },
   {
@@ -41,7 +41,7 @@ const projects: Project[] = [
       "Disponibilidade consultada direto no WhatsApp",
       "Domínio próprio",
     ],
-    image: "/portfolio/chacaras-morro-grande.webp",
+    image: "portfolio/chacaras-morro-grande.webp",
     imageAlt: "Imagem de apresentação do site Chácaras Morro Grande",
     imagePosition: "center top",
   },
@@ -54,7 +54,7 @@ const projects: Project[] = [
       "Cada produto com botão de pedido no WhatsApp",
       "Endereço e domínio próprio",
     ],
-    image: "/portfolio/dora-doces.webp",
+    image: "portfolio/dora-doces.webp",
     imageAlt: "Imagem de apresentação do site Dora Doces e Biscoitos",
   },
 ];
