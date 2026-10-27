@@ -5,6 +5,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Portfolio from "./Portfolio";
 import Packages from "./Packages";
+import { AREA, BRAND_NAME, OWNER_NAME } from "./content";
 import { linkWhats, whatsappMessages, type WhatsAppMessage } from "./whatsapp";
 import "./styles.css";
 
@@ -86,7 +87,7 @@ function PageMotion() {
       .forEach((word) => titleWords.push(word));
 
     const heroItems = gsap.utils.toArray<HTMLElement>(
-      ".hero-copy > .eyebrow, .hero-copy > .hero-lead, .hero-copy > .button",
+      ".hero-copy > .hero-lead, .hero-copy > .button",
     );
     const sections = gsap.utils.toArray<HTMLElement>(".reveal");
     if (reducedMotion || compactViewport) {
@@ -96,11 +97,6 @@ function PageMotion() {
     const context = gsap.context(() => {
       const heroTimeline = gsap.timeline();
       heroTimeline
-        .fromTo(
-          ".hero-copy > .eyebrow",
-          { autoAlpha: 0, y: 10 },
-          { autoAlpha: 1, y: 0, duration: 0.22, ease: "power2.out" },
-        )
         .fromTo(
           titleWords,
           { autoAlpha: 0, y: 14 },
@@ -207,4 +203,14 @@ function App() {
 
 const year = document.querySelector("[data-current-year]");
 if (year) year.textContent = new Date().getFullYear().toString();
+
+document.querySelectorAll<HTMLElement>("[data-brand-name]").forEach((element) => {
+  element.textContent = BRAND_NAME;
+});
+document.querySelectorAll<HTMLElement>("[data-owner-name]").forEach((element) => {
+  element.textContent = OWNER_NAME;
+});
+document.querySelectorAll<HTMLElement>("[data-area]").forEach((element) => {
+  element.textContent = AREA;
+});
 createRoot(document.getElementById("react-effects-root")!).render(<App />);

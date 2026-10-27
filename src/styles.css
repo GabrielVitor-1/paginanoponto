@@ -217,7 +217,9 @@ footer {
 }
 
 .brand {
-  display: inline-grid;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.45rem;
   text-decoration: none;
 }
 
@@ -225,12 +227,18 @@ footer {
   font-family: var(--display);
   font-size: 1.05rem;
   line-height: 1.1;
+  white-space: nowrap;
 }
 
-.brand span {
-  display: none;
+.brand > span {
   color: var(--ardosia-suave);
   font-size: 0.77rem;
+  white-space: nowrap;
+}
+
+.brand .brand-accent {
+  color: var(--telha);
+  font-size: inherit;
 }
 
 nav {
@@ -303,14 +311,6 @@ nav .nav-contact {
 
 .hero-grid > * {
   min-width: 0;
-}
-
-.eyebrow,
-.section-label {
-  margin: 0 0 1rem;
-  color: var(--caicacao);
-  font-size: 0.9rem;
-  font-weight: 600;
 }
 
 h1,
@@ -526,10 +526,6 @@ h3 {
   color: var(--caicacao);
 }
 
-.process .section-label {
-  color: #c6d7d3;
-}
-
 .section-heading {
   margin-bottom: clamp(2.5rem, 7vw, 5rem);
 }
@@ -574,7 +570,7 @@ h3 {
   align-items: center;
 }
 
-.demo-copy > p:not(.section-label) {
+.demo-copy > p {
   max-width: 34rem;
   color: var(--ardosia-suave);
   font-size: 1.08rem;
@@ -742,27 +738,13 @@ h3 {
   padding: 1.5rem;
 }
 
-.sample-kicker {
-  margin-bottom: 0.4rem;
-  color: var(--accent-petroleo-light);
-  font-size: 0.84rem;
-  font-weight: 600;
-}
-
 .sample-content h3 {
   max-width: 18ch;
   font-size: clamp(1.55rem, 5vw, 2.2rem);
 }
 
-.sample-content > p:not(.sample-kicker) {
+.sample-content > p {
   color: var(--ardosia-suave);
-}
-
-.sample-action {
-  display: inline-block;
-  padding-block: 0.35rem;
-  border-bottom: 2px solid var(--esquadria);
-  font-weight: 600;
 }
 
 .pricing {
@@ -779,7 +761,7 @@ h3 {
   margin-bottom: 2rem;
 }
 
-.portfolio-heading > p:not(.section-label) {
+.portfolio-heading > p {
   max-width: 38rem;
   margin-top: 1rem;
   color: var(--ardosia-suave);
@@ -916,30 +898,8 @@ h3 {
   }
 }
 
-.proof-strip {
-  display: flex;
-  gap: 1.25rem;
-  align-items: center;
-  justify-content: space-between;
+.portfolio-cta {
   margin-top: 2rem;
-  padding: 1.25rem;
-  border: 1px dashed var(--esquadria);
-  border-radius: var(--radius-md);
-  background: var(--surface-glass);
-}
-
-.proof-strip p {
-  margin: 0;
-}
-
-.proof-strip-title {
-  color: var(--caicacao);
-  font-weight: 600;
-}
-
-.proof-strip-copy {
-  margin-top: 0.2rem !important;
-  color: #b4b9ac;
 }
 
 .pricing-heading {
@@ -1303,15 +1263,11 @@ h3 {
   filter: blur(32px);
 }
 
-.final-cta .section-label {
-  color: #dce9e6;
-}
-
 .final-cta h2 {
   max-width: 15ch;
 }
 
-.final-cta-inner > p:not(.section-label) {
+.final-cta-inner > p {
   max-width: 36rem;
   color: #e2edeb;
   font-size: 1.1rem;
@@ -1461,10 +1417,6 @@ footer,
     display: inline-flex;
   }
 
-  .brand span {
-    display: block;
-  }
-
   .hero-grid,
   .split-copy,
   .demo-grid {
@@ -1532,15 +1484,6 @@ footer,
 }
 
 @media (width < 42rem) {
-  .proof-strip {
-    align-items: stretch;
-    flex-direction: column;
-  }
-
-  .proof-strip .button {
-    width: 100%;
-  }
-
   .page-atmosphere-glow {
     opacity: 0.24;
   }

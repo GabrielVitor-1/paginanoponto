@@ -1,5 +1,4 @@
 import { linkWhats, whatsappMessages } from "./whatsapp";
-import { portfolioProofHeading } from "./content";
 
 type Segment = "pousada" | "loja" | "salao" | "oficina" | "turismo";
 type Project = {
@@ -70,7 +69,6 @@ export default function Portfolio() {
     >
       <div className="container">
         <div className="portfolio-heading reveal">
-          <p className="section-label">Alguns dos meus trabalhos</p>
           <h2 id="trabalhos-titulo">Cada negócio precisa de um jeito claro de ser encontrado.</h2>
           <p>Uma seleção das páginas que fiz. Cada uma parte do que o negócio precisa mostrar.</p>
         </div>
@@ -118,11 +116,7 @@ export default function Portfolio() {
             </article>
           ))}
         </div>
-        <div className="proof-strip reveal">
-          <div>
-            {portfolioProofHeading && <p className="proof-strip-title">{portfolioProofHeading}</p>}
-            <p className="proof-strip-copy">A próxima pode ser a do seu negócio.</p>
-          </div>
+        <div className="portfolio-cta reveal">
           <a
             className="button button-primary"
             href={whatsappUrl}

@@ -1,5 +1,6 @@
 {
   "name": "Página no Ponto",
+  "short_name": "Página no Ponto",
   "icons": [
     {
       "src": "./icon-192.png",
