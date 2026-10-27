@@ -163,7 +163,7 @@ function ScrollStates() {
     if (reducedMotion) return;
 
     const targets = document.querySelectorAll<HTMLElement>(
-      ".process-list li, .sample-page, .portfolio-card, .package-card, .package-included",
+      ".process-list li, .portfolio-card, .package-card, .package-included",
     );
     const observer = new IntersectionObserver(
       (entries) => {
