@@ -604,63 +604,6 @@ h3 {
   transform: rotate(-45deg);
 }
 
-.sample-page {
-  overflow: hidden;
-  border: 1px solid var(--linha);
-  border-radius: var(--radius-md);
-  background: var(--surface-glass);
-  transition: transform var(--duration-base) var(--ease-enter);
-}
-
-.sample-page.is-active {
-  box-shadow: var(--shadow-glow);
-  transform: translate3d(0, -0.2rem, 0);
-}
-
-.sample-page figure {
-  position: relative;
-  aspect-ratio: 3 / 2;
-  margin: 0;
-  overflow: hidden;
-}
-
-.sample-page img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.sample-page figcaption {
-  position: absolute;
-  right: 0.75rem;
-  bottom: 0.75rem;
-  padding: 0.25rem 0.45rem;
-  background: rgb(42 43 38 / 85%);
-  color: var(--caicacao);
-  font-size: 0.72rem;
-}
-
-.sample-content {
-  padding: 1.5rem;
-}
-
-.sample-kicker {
-  margin-bottom: 0.4rem;
-  color: var(--accent-petroleo-light);
-  font-size: 0.84rem;
-  font-weight: 600;
-}
-
-.sample-content h3 {
-  max-width: 18ch;
-  font-size: clamp(1.55rem, 5vw, 2.2rem);
-}
-
-.sample-content > p:not(.sample-kicker) {
-  color: var(--ardosia-suave);
-}
-
-.sample-action,
 .text-link,
 .package-card a {
   display: inline-block;
@@ -668,6 +611,10 @@ h3 {
   border-bottom: 2px solid var(--esquadria);
   font-weight: 600;
   text-decoration: none;
+}
+
+.demo-portfolio-link {
+  width: fit-content;
 }
 
 .pricing {
@@ -682,6 +629,12 @@ h3 {
 
 .portfolio-heading {
   margin-bottom: 2rem;
+}
+
+.portfolio-heading > p:not(.section-label) {
+  max-width: 38rem;
+  margin-top: 1rem;
+  color: var(--ardosia-suave);
 }
 
 .portfolio-grid {
@@ -756,7 +709,7 @@ h3 {
 }
 
 .portfolio-card li {
-  color: var(--ardosia-suave);
+  color: #b4b9ac;
   opacity: 0.95;
 }
 
@@ -815,8 +768,30 @@ h3 {
   }
 }
 
-.portfolio-cta {
+.proof-strip {
+  display: flex;
+  gap: 1.25rem;
+  align-items: center;
+  justify-content: space-between;
   margin-top: 2rem;
+  padding: 1.25rem;
+  border: 1px dashed var(--esquadria);
+  border-radius: var(--radius-md);
+  background: var(--surface-glass);
+}
+
+.proof-strip p {
+  margin: 0;
+}
+
+.proof-strip-title {
+  color: var(--caicacao);
+  font-weight: 600;
+}
+
+.proof-strip-copy {
+  margin-top: 0.2rem !important;
+  color: #b4b9ac;
 }
 
 .pricing-heading {
@@ -1409,6 +1384,15 @@ footer,
 }
 
 @media (width < 42rem) {
+  .proof-strip {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .proof-strip .button {
+    width: 100%;
+  }
+
   .page-atmosphere-glow {
     opacity: 0.24;
   }
@@ -1508,7 +1492,6 @@ footer,
   nav a,
   nav a::after,
   .process-list li,
-  .sample-page,
   .portfolio-card,
   .package-card,
   .package-included {

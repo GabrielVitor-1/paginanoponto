@@ -1,4 +1,5 @@
 import { linkWhats, whatsappMessages } from "./whatsapp";
+import { portfolioProofHeading } from "./content";
 
 type Segment = "pousada" | "loja" | "salao" | "oficina" | "turismo";
 type Project = {
@@ -8,6 +9,7 @@ type Project = {
   deliveries: [string, string, string];
   image: string;
   imageAlt: string;
+  imagePosition?: string;
 };
 
 const labels: Record<Segment, string> = {
@@ -41,6 +43,7 @@ const projects: Project[] = [
     ],
     image: "/portfolio/chacaras-morro-grande.webp",
     imageAlt: "Imagem de apresentação do site Chácaras Morro Grande",
+    imagePosition: "center top",
   },
   {
     name: "Dora Doces e Biscoitos",
@@ -67,8 +70,9 @@ export default function Portfolio() {
     >
       <div className="container">
         <div className="portfolio-heading reveal">
-          <p className="section-label">Páginas que já entreguei</p>
+          <p className="section-label">Alguns dos meus trabalhos</p>
           <h2 id="trabalhos-titulo">Cada negócio precisa de um jeito claro de ser encontrado.</h2>
+          <p>Uma seleção das páginas que fiz. Cada uma parte do que o negócio precisa mostrar.</p>
         </div>
         <div className="portfolio-grid">
           {projects.map((project) => (
@@ -80,6 +84,7 @@ export default function Portfolio() {
                   width="1200"
                   height="630"
                   loading="lazy"
+                  style={{ objectPosition: project.imagePosition }}
                   onError={(event) => {
                     event.currentTarget.hidden = true;
                   }}
@@ -98,7 +103,9 @@ export default function Portfolio() {
                     className="portfolio-visit"
                     href={project.url}
                     target="_blank"
-                    rel="noopener noreferrer"
+                    rel="noopener"
+                    data-evento="portfolio_click"
+                    data-cliente={project.name}
                     aria-label={`Visitar site: abrir o site de ${project.name} em nova aba`}
                   >
                     <span>Visitar site</span>
@@ -111,15 +118,21 @@ export default function Portfolio() {
             </article>
           ))}
         </div>
-        <a
-          className="button button-primary portfolio-cta"
-          href={whatsappUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="Quero uma página para meu negócio: abrir conversa pelo WhatsApp"
-        >
-          Quero uma página para meu negócio
-        </a>
+        <div className="proof-strip reveal">
+          <div>
+            {portfolioProofHeading && <p className="proof-strip-title">{portfolioProofHeading}</p>}
+            <p className="proof-strip-copy">A próxima pode ser a do seu negócio.</p>
+          </div>
+          <a
+            className="button button-primary"
+            href={whatsappUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Quero uma página para meu negócio: abrir conversa pelo WhatsApp"
+          >
+            Quero uma página para meu negócio
+          </a>
+        </div>
       </div>
     </section>
   );
