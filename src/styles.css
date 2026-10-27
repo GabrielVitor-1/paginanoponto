@@ -217,7 +217,9 @@ footer {
 }
 
 .brand {
-  display: inline-grid;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.45rem;
   text-decoration: none;
 }
 
@@ -225,12 +227,18 @@ footer {
   font-family: var(--display);
   font-size: 1.05rem;
   line-height: 1.1;
+  white-space: nowrap;
 }
 
-.brand span {
-  display: none;
+.brand > span {
   color: var(--ardosia-suave);
   font-size: 0.77rem;
+  white-space: nowrap;
+}
+
+.brand .brand-accent {
+  color: var(--telha);
+  font-size: inherit;
 }
 
 nav {
@@ -1459,10 +1467,6 @@ footer,
 
   nav a {
     display: inline-flex;
-  }
-
-  .brand span {
-    display: block;
   }
 
   .hero-grid,

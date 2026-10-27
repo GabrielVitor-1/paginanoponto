@@ -5,6 +5,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Portfolio from "./Portfolio";
 import Packages from "./Packages";
+import { BRAND_NAME, OWNER_NAME } from "./content";
 import { linkWhats, whatsappMessages, type WhatsAppMessage } from "./whatsapp";
 import "./styles.css";
 
@@ -207,4 +208,12 @@ function App() {
 
 const year = document.querySelector("[data-current-year]");
 if (year) year.textContent = new Date().getFullYear().toString();
+
+document.querySelectorAll<HTMLElement>("[data-brand-name]").forEach((element) => {
+  element.textContent = BRAND_NAME;
+});
+document.querySelectorAll<HTMLElement>("[data-owner-name]").forEach((element) => {
+  element.textContent = OWNER_NAME;
+});
+
 createRoot(document.getElementById("react-effects-root")!).render(<App />);
