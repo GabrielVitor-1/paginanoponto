@@ -361,6 +361,29 @@ h3 {
   font-size: clamp(1.03rem, 2.5vw, 1.17rem);
 }
 
+.eyebrow,
+.discovery-kicker {
+  margin-bottom: 1rem;
+  color: var(--accent-areia);
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  line-height: 1.35;
+  text-transform: uppercase;
+}
+
+.hero-note {
+  max-width: 31rem;
+  margin: 1rem 0 0;
+  color: var(--text-muted);
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.hero-copy > .button {
+  margin-top: 0.15rem;
+}
+
 .hero-enter {
   opacity: 1;
   transform: none;
@@ -434,19 +457,27 @@ h3 {
 
 .discovery {
   align-self: end;
-  padding: 1.5rem;
+  padding: clamp(1.5rem, 3vw, 2.25rem);
   border: 1px solid var(--linha);
   border-radius: var(--radius-md);
-  background: var(--surface-glass);
-  box-shadow: var(--shadow-sm);
+  background: linear-gradient(145deg, rgb(31 74 69 / 36%), transparent 58%), var(--surface-glass);
+  box-shadow: var(--shadow-md);
   backdrop-filter: blur(0.5rem);
 }
 
-.discovery-title {
-  margin-bottom: 1.5rem;
+.discovery-kicker {
+  margin-bottom: 0.6rem;
+  color: var(--accent-petroleo-light);
+}
+
+.discovery-statement {
+  max-width: 14ch;
+  margin-bottom: 1.8rem;
   color: var(--caicacao);
-  font-size: 0.9rem;
+  font-family: var(--display);
+  font-size: clamp(1.55rem, 3.1vw, 2.2rem);
   font-weight: 600;
+  line-height: 1.08;
 }
 
 .split-flap {
@@ -477,7 +508,7 @@ h3 {
   display: grid;
   grid-template-columns: 1.7rem minmax(0, 1fr);
   align-items: baseline;
-  padding: 0.55rem 0;
+  padding: 0.7rem 0;
   border-top: 1px solid var(--linha);
 }
 
