@@ -1064,7 +1064,43 @@ footer,
 }
 
 main .discovery {
-  background: linear-gradient(145deg, rgb(255 107 87 / 10%), transparent 55%), var(--azul-2);
+  width: min(100%, 20rem);
+  justify-self: end;
+  padding: clamp(1.25rem, 2vw, 1.5rem);
+  border: 0;
+  background: var(--coral);
+  box-shadow: 0 0.8rem 1.8rem rgb(0 0 0 / 18%);
+}
+
+main .discovery .discovery-kicker,
+main .discovery .discovery-statement,
+main .discovery li,
+main .discovery li span,
+main .discovery li strong {
+  color: var(--texto-sobre-coral);
+}
+
+main .discovery .discovery-kicker {
+  margin-bottom: 0.4rem;
+}
+
+main .discovery .discovery-statement {
+  margin-bottom: 1rem;
+  font-size: clamp(1.35rem, 2.3vw, 1.7rem);
+}
+
+main .discovery li {
+  grid-template-columns: 2.1rem minmax(0, 1fr);
+  padding: 0.45rem 0;
+  border-color: rgb(6 21 38 / 24%);
+}
+
+main .discovery li span {
+  font-size: 1.5rem;
+}
+
+main .discovery li strong {
+  font-size: clamp(1rem, 1.8vw, 1.2rem);
 }
 
 .discovery li,
@@ -1163,6 +1199,18 @@ body > footer {
 
   .price-row {
     border-radius: 1.25rem;
+  }
+
+  main .discovery {
+    width: 100%;
+    justify-self: stretch;
+  }
+}
+
+@media (width >= 42rem) {
+  main .discovery ol {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 1rem;
   }
 }
 
