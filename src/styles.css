@@ -1523,28 +1523,35 @@ body > footer {
 }
 
 .trust-content .trust-closing {
-  margin-bottom: 1.5rem;
+  margin-bottom: 2.25rem;
 }
 
 .trust-button {
   display: inline-flex;
   min-height: 44px;
   align-items: center;
-  padding-inline: 1rem;
+  padding: 0.85rem 1.25rem;
   border: 1px solid var(--esquadria);
-  color: var(--caicacao);
+  border-radius: 999px;
+  background: var(--branco);
+  box-shadow: 0 0.65rem 1.4rem rgb(0 0 0 / 18%);
+  color: var(--texto-sobre-coral);
   font-size: 0.94rem;
-  font-weight: 500;
+  font-weight: 700;
   text-decoration: none;
   transition:
-    border-color 150ms ease,
-    color 150ms ease;
+    transform 180ms ease,
+    border-color 180ms ease,
+    background-color 180ms ease,
+    color 180ms ease;
 }
 
 .trust-button:hover,
 .trust-button:focus-visible {
-  border-color: var(--telha);
-  color: var(--telha);
+  border-color: var(--branco);
+  background: var(--azul);
+  color: var(--branco);
+  transform: translateY(-2px);
 }
 
 .final-cta {
