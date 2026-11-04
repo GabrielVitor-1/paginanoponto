@@ -1,11 +1,12 @@
 :root {
   /* Identidade azul e coral */
-  --azul: #061526;
-  --azul-2: #0b2745;
-  --branco: #fff;
-  --branco-suave: #c9d3e3;
-  --coral: #ff6b57;
-  --texto-sobre-coral: #061526;
+  --azul: #293f76;
+  --azul-2: #003e7f;
+  --branco: #fceea8;
+  --branco-suave: rgb(252 238 168 / 82%);
+  --coral: #d8402f;
+  --texto-sobre-coral: #293f76;
+  --whatsapp-verde: #25d366;
   --caicacao: var(--branco);
   --ardosia: var(--azul);
   --ardosia-suave: var(--branco-suave);
@@ -16,7 +17,7 @@
   --linha: rgb(255 255 255 / 14%);
   --surface-base: var(--azul);
   --surface-raised: var(--azul-2);
-  --surface-glass: rgb(11 39 69 / 92%);
+  --surface-glass: rgb(0 62 127 / 92%);
   --text-primary: var(--branco);
   --text-muted: var(--branco-suave);
   --text-on-terra: var(--texto-sobre-coral);
@@ -214,7 +215,7 @@ footer {
 
 .site-header.is-scrolled .header-inner {
   border-color: var(--border-subtle);
-  background: rgb(6 21 38 / 96%);
+  background: rgb(41 63 118 / 96%);
   box-shadow: var(--shadow-sm);
 }
 
@@ -758,8 +759,8 @@ h3 {
   justify-content: center;
   padding: 0.45rem 0.65rem;
   border-radius: var(--radius-sm);
-  background: var(--telha);
-  color: var(--text-on-terra);
+  background: var(--whatsapp-verde);
+  color: var(--texto-sobre-coral);
   font-size: 0.72rem;
   font-weight: 700;
   text-align: center;
@@ -944,7 +945,7 @@ body {
 
 .site-header .header-inner {
   border-color: var(--border-subtle);
-  background: rgb(6 21 38 / 88%);
+  background: rgb(41 63 118 / 88%);
 }
 
 .brand-accent,
@@ -953,7 +954,7 @@ body {
 .package-for,
 .discovery-kicker,
 .eyebrow {
-  color: var(--coral);
+  color: var(--branco);
   font-family: var(--body);
   font-size: 0.75rem;
   font-weight: 700;
@@ -1028,7 +1029,7 @@ footer,
   min-height: 44px;
   border-color: var(--coral);
   border-radius: 999px;
-  background: var(--coral);
+  background: var(--branco);
   box-shadow: 0 0.65rem 1.4rem rgb(0 0 0 / 18%);
   color: var(--texto-sobre-coral);
   font-weight: 700;
@@ -1067,20 +1068,19 @@ main .discovery {
   width: min(100%, 20rem);
   justify-self: end;
   padding: clamp(1.25rem, 2vw, 1.5rem);
-  border: 0;
-  background: var(--coral);
+  border: 1px solid var(--coral);
+  background: var(--azul-2);
   box-shadow: 0 0.8rem 1.8rem rgb(0 0 0 / 18%);
 }
 
-main .discovery .discovery-kicker,
 main .discovery .discovery-statement,
 main .discovery li,
-main .discovery li span,
 main .discovery li strong {
-  color: var(--texto-sobre-coral);
+  color: var(--branco);
 }
 
 main .discovery .discovery-kicker {
+  color: var(--branco);
   margin-bottom: 0.4rem;
 }
 
@@ -1092,10 +1092,11 @@ main .discovery .discovery-statement {
 main .discovery li {
   grid-template-columns: 2.1rem minmax(0, 1fr);
   padding: 0.45rem 0;
-  border-color: rgb(6 21 38 / 24%);
+  border-color: rgb(252 238 168 / 24%);
 }
 
 main .discovery li span {
+  color: var(--branco);
   font-size: 1.5rem;
 }
 
@@ -1110,7 +1111,7 @@ main .discovery li strong {
 
 .discovery li span,
 .process-list li > span {
-  color: var(--coral);
+  color: var(--branco);
   font-family: var(--display);
   font-size: clamp(2rem, 4vw, 3.4rem);
   font-style: italic;
@@ -1153,13 +1154,6 @@ main .phone-example-screen {
   color: var(--branco-suave);
 }
 
-.phone-example-whatsapp,
-.package-badge {
-  background: var(--coral);
-  color: var(--texto-sobre-coral);
-  font-weight: 700;
-}
-
 .portfolio-visit,
 .package-action a {
   border-color: var(--coral);
@@ -1171,7 +1165,7 @@ main .phone-example-screen {
 .package-action a:hover,
 .package-action a:focus-visible {
   border-color: var(--branco);
-  color: var(--coral);
+  color: var(--branco);
 }
 
 .price-row.featured,
@@ -1184,7 +1178,7 @@ main .final-cta {
 }
 
 .final-cta .button-light {
-  background: var(--coral);
+  background: var(--branco);
   color: var(--texto-sobre-coral);
 }
 
@@ -1267,10 +1261,10 @@ body > footer {
   width: fit-content;
   margin-bottom: 1rem;
   padding: 0.2rem 0.45rem;
-  background: var(--telha);
-  color: var(--text-on-terra);
+  background: var(--branco);
+  color: var(--texto-sobre-coral);
   font-size: 0.82rem;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .package-for {
