@@ -1,11 +1,11 @@
 :root {
   /* Identidade azul e coral */
-  --azul: #293f76;
-  --azul-2: #003e7f;
+  --azul: #1e315f;
+  --azul-2: #002f63;
   --branco: #fceea8;
   --branco-suave: rgb(252 238 168 / 82%);
   --coral: #d8402f;
-  --texto-sobre-coral: #293f76;
+  --texto-sobre-coral: #1e315f;
   --whatsapp-verde: #25d366;
   --caicacao: var(--branco);
   --ardosia: var(--azul);
@@ -17,7 +17,7 @@
   --linha: rgb(255 255 255 / 14%);
   --surface-base: var(--azul);
   --surface-raised: var(--azul-2);
-  --surface-glass: rgb(0 62 127 / 92%);
+  --surface-glass: rgb(0 47 99 / 92%);
   --text-primary: var(--branco);
   --text-muted: var(--branco-suave);
   --text-on-terra: var(--texto-sobre-coral);
@@ -215,7 +215,7 @@ footer {
 
 .site-header.is-scrolled .header-inner {
   border-color: var(--border-subtle);
-  background: rgb(41 63 118 / 96%);
+  background: rgb(30 49 95 / 96%);
   box-shadow: var(--shadow-sm);
 }
 
@@ -945,7 +945,7 @@ body {
 
 .site-header .header-inner {
   border-color: var(--border-subtle);
-  background: rgb(41 63 118 / 88%);
+  background: rgb(30 49 95 / 88%);
 }
 
 .brand-accent,
