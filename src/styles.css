@@ -213,8 +213,8 @@ footer {
 }
 
 .site-header.is-scrolled .header-inner {
-  border-color: rgb(198 215 211 / 40%);
-  background: rgb(28 29 24 / 92%);
+  border-color: var(--border-subtle);
+  background: rgb(11 31 58 / 96%);
   box-shadow: var(--shadow-sm);
 }
 
