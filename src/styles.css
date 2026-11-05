@@ -578,6 +578,12 @@ h3 {
   will-change: transform, opacity;
 }
 
+@media (width >= 769px) {
+  .pill:nth-child(n + 11) {
+    display: none;
+  }
+}
+
 .pill::before,
 .pill::after,
 .ambient-object-core::before,
@@ -940,17 +946,58 @@ h3 {
   overflow: hidden;
   border: 1px solid transparent;
   background:
-    linear-gradient(135deg, rgb(252 238 168 / 12%), rgb(0 47 99 / 72%)) padding-box,
+    linear-gradient(135deg, rgb(0 47 99 / 60%), rgb(0 47 99 / 48%)) padding-box,
     linear-gradient(125deg, rgb(216 64 47 / 70%), transparent 56%, rgb(252 238 168 / 46%))
       border-box;
   box-shadow:
     inset 0 1px 0 rgb(252 238 168 / 25%),
     0 1.25rem 3.125rem -1.25rem rgb(0 0 0 / 50%);
   /* stylelint-disable-next-line property-no-vendor-prefix */
-  -webkit-backdrop-filter: blur(16px) saturate(140%);
-  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  backdrop-filter: blur(14px) saturate(140%);
   transform-style: preserve-3d;
   will-change: transform, opacity;
+}
+
+.section-glass-blobs {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.section-glass-blobs span {
+  position: absolute;
+  width: clamp(10rem, 22vw, 20rem);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  filter: blur(40px);
+  opacity: 0.24;
+  will-change: transform;
+}
+
+.section-glass-blobs span:nth-child(1) {
+  top: 8%;
+  left: -8%;
+  background: radial-gradient(circle, var(--coral), transparent 70%);
+}
+
+.section-glass-blobs span:nth-child(2) {
+  top: 45%;
+  right: -10%;
+  background: radial-gradient(circle, var(--branco), transparent 70%);
+}
+
+.section-glass-blobs span:nth-child(3) {
+  bottom: -20%;
+  left: 38%;
+  background: radial-gradient(circle, var(--coral), transparent 70%);
+}
+
+.pricing .package-grid {
+  position: relative;
+  z-index: 1;
 }
 
 .glass-card::before,
@@ -1508,7 +1555,7 @@ body > footer {
   display: flex;
   min-height: 100%;
   flex-direction: column;
-  padding: 1.5rem;
+  padding: 3.45rem 1.5rem 1.5rem;
   border: 1px solid var(--esquadria);
   border-radius: var(--radius-md);
   background: var(--surface-glass);
@@ -1532,6 +1579,9 @@ body > footer {
 }
 
 .package-badge {
+  position: absolute;
+  top: 1.5rem;
+  left: 1.5rem;
   width: fit-content;
   margin-bottom: 1rem;
   padding: 0.2rem 0.45rem;

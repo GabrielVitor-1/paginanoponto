@@ -162,6 +162,7 @@ function PillParallax() {
   useEffect(() => {
     const section = document.querySelector<HTMLElement>(".problem");
     const pills = gsap.utils.toArray<HTMLElement>(".problem .pill");
+    const textBlocks = gsap.utils.toArray<HTMLElement>(".problem h2, .problem .body-copy p");
     if (!section || !pills.length) return;
 
     const cubeLayouts = [
@@ -190,7 +191,11 @@ function PillParallax() {
           const [size, left, top] = cubeLayouts[index];
           const speed = Number(pill.dataset.speed);
           const isNear = speed >= 1;
-          const opacity = isNear ? 0.58 + Math.min((speed - 1) * 0.28, 0.2) : 0.34 + speed * 0.22;
+          const nearCopy = [4, 6, 9].includes(index);
+          const baseOpacity = isNear
+            ? 0.58 + Math.min((speed - 1) * 0.28, 0.2)
+            : 0.34 + speed * 0.22;
+          const opacity = nearCopy ? baseOpacity * 0.48 : baseOpacity;
           const z = isNear ? (speed - 1) * 180 : -(1 - speed) * 180;
           const scale = isNear ? 1 + (speed - 1) * 0.16 : 0.9 + speed * 0.1;
           const blur = isNear ? 0 : 1 + (1 - speed) * 5;
@@ -241,6 +246,25 @@ function PillParallax() {
               },
             },
           );
+
+          ScrollTrigger.create({
+            trigger: section,
+            start: "top bottom",
+            end: "bottom top",
+            onUpdate: () => {
+              const pillBounds = pill.getBoundingClientRect();
+              const overlapsText = textBlocks.some((textBlock) => {
+                const textBounds = textBlock.getBoundingClientRect();
+                return !(
+                  pillBounds.right < textBounds.left ||
+                  pillBounds.left > textBounds.right ||
+                  pillBounds.bottom < textBounds.top ||
+                  pillBounds.top > textBounds.bottom
+                );
+              });
+              gsap.set(pill, { opacity: overlapsText ? opacity * 0.3 : opacity });
+            },
+          });
         });
       };
 
@@ -403,6 +427,7 @@ function AmbientObjects() {
 function GlassCardMotion() {
   useEffect(() => {
     const cards = gsap.utils.toArray<HTMLElement>(".glass-card");
+    const sectionBlobGroups = gsap.utils.toArray<HTMLElement>(".section-glass-blobs");
     if (!cards.length) return;
 
     const media = gsap.matchMedia();
@@ -410,6 +435,29 @@ function GlassCardMotion() {
       media.add("(prefers-reduced-motion: no-preference)", () => {
         const touchOnly = !window.matchMedia("(hover: hover) and (pointer: fine)").matches;
         const removeTouchListeners: Array<() => void> = [];
+
+        sectionBlobGroups.forEach((group, groupIndex) => {
+          const section = group.closest<HTMLElement>("section");
+          if (!section) return;
+          group.querySelectorAll<HTMLElement>("span").forEach((blob, blobIndex) => {
+            const direction = (groupIndex + blobIndex) % 2 === 0 ? 1 : -1;
+            gsap.fromTo(
+              blob,
+              { xPercent: direction * -10, yPercent: blobIndex * 8 },
+              {
+                xPercent: direction * 16,
+                yPercent: -blobIndex * 10,
+                ease: "none",
+                scrollTrigger: {
+                  trigger: section,
+                  start: "top bottom",
+                  end: "bottom top",
+                  scrub: 1.4,
+                },
+              },
+            );
+          });
+        });
 
         cards.forEach((card, cardIndex) => {
           gsap.fromTo(

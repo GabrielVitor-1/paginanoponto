@@ -44,19 +44,17 @@ const included = [
 export default function Packages() {
   return (
     <>
+      <div className="section-glass-blobs" aria-hidden="true">
+        <span />
+        <span />
+        <span />
+      </div>
       <div className="package-grid reveal">
         {packages.map((item) => (
           <article
-            className={`package-card${item.featured ? " package-card-featured glass-card" : ""}`}
+            className={`package-card glass-card${item.featured ? " package-card-featured" : ""}`}
             key={item.name}
           >
-            {item.featured && (
-              <div className="glass-blobs" aria-hidden="true">
-                <span />
-                <span />
-                <span />
-              </div>
-            )}
             {item.featured && <p className="package-badge">Mais escolhido</p>}
             <p className="package-for">Para quem é</p>
             <h3>{item.name}</h3>
