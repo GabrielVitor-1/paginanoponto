@@ -535,10 +535,166 @@ h3 {
   padding-block: var(--section-space);
 }
 
-.problem,
 .trust {
   border-top: 1px solid var(--linha);
   background: rgb(28 29 24 / 95%);
+}
+
+.problem {
+  position: relative;
+  z-index: 1;
+  isolation: isolate;
+  overflow: hidden;
+  background: var(--azul);
+}
+
+.problem > .container {
+  position: relative;
+  z-index: 1;
+}
+
+.pills {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  perspective: 900px;
+}
+
+.pill {
+  position: absolute;
+  width: var(--pill-size);
+  height: var(--pill-size);
+  border: 1px solid rgb(252 238 168 / 48%);
+  border-radius: 0.2rem;
+  background: linear-gradient(135deg, rgb(216 64 47 / 84%), rgb(0 47 99 / 70%));
+  box-shadow:
+    inset 0.22rem 0.22rem 0.45rem rgb(252 238 168 / 20%),
+    inset -0.35rem -0.35rem 0.65rem rgb(0 0 0 / 28%),
+    0 0.7rem 1.5rem rgb(216 64 47 / 20%);
+  opacity: var(--pill-opacity, 0.4);
+  transform-style: preserve-3d;
+  will-change: transform, opacity;
+}
+
+.pill::before,
+.pill::after,
+.ambient-object-core::before,
+.ambient-object-core::after {
+  position: absolute;
+  display: block;
+  content: "";
+}
+
+.pill::before,
+.ambient-object-core::before {
+  top: -0.45rem;
+  left: 0;
+  width: 100%;
+  height: 0.45rem;
+  background: var(--branco-suave);
+  transform: rotateX(90deg);
+  transform-origin: bottom;
+}
+
+.pill::after,
+.ambient-object-core::after {
+  top: 0;
+  right: -0.45rem;
+  width: 0.45rem;
+  height: 100%;
+  background: var(--azul-2);
+  transform: rotateY(90deg);
+  transform-origin: left;
+}
+
+.has-ambient-objects {
+  position: relative;
+  z-index: 1;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.has-ambient-objects > .container {
+  position: relative;
+  z-index: 1;
+}
+
+.ambient-objects {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  perspective: 900px;
+}
+
+.ambient-wave {
+  position: absolute;
+  top: -8%;
+  bottom: -8%;
+  left: -20%;
+  width: 140%;
+  background: url("/texturas/curvas-cerrado.svg") center / cover no-repeat;
+  opacity: 0.14;
+  will-change: transform, opacity;
+}
+
+.ambient-object {
+  position: absolute;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.ambient-object-core {
+  display: block;
+  width: var(--ambient-size);
+  height: var(--ambient-size);
+  border: 1px solid rgb(252 238 168 / 42%);
+  border-radius: 0.25rem;
+  background: linear-gradient(135deg, rgb(216 64 47 / 80%), rgb(0 47 99 / 66%));
+  box-shadow:
+    inset 0.22rem 0.22rem 0.45rem rgb(252 238 168 / 24%),
+    inset -0.3rem -0.45rem 0.8rem rgb(0 0 0 / 22%),
+    0 0.8rem 1.75rem rgb(216 64 47 / 18%);
+  transform-style: preserve-3d;
+  will-change: transform, opacity;
+}
+
+.ambient-object:nth-of-type(1) {
+  --ambient-size: 28px;
+
+  top: 12%;
+  left: 7%;
+}
+
+.ambient-object:nth-of-type(2) {
+  --ambient-size: 44px;
+
+  top: 74%;
+  left: 18%;
+}
+
+.ambient-object:nth-of-type(3) {
+  --ambient-size: 24px;
+
+  top: 9%;
+  right: 12%;
+}
+
+.ambient-object:nth-of-type(4) {
+  --ambient-size: 54px;
+
+  top: 45%;
+  right: 5%;
+}
+
+.ambient-object:nth-of-type(5) {
+  --ambient-size: 36px;
+
+  top: 87%;
+  right: 26%;
 }
 
 .split-copy,
@@ -648,6 +804,7 @@ h3 {
 }
 
 .sample-page {
+  position: relative;
   overflow: hidden;
   border: 1px solid var(--linha);
   border-radius: var(--radius-md);
@@ -768,7 +925,121 @@ h3 {
 
 @media (hover: hover) and (pointer: fine) {
   .sample-page:hover .phone-example-screen {
-    transform: translate3d(0, -0.2rem, 0) rotate(0.35deg);
+    transform: translate3d(0, -0.35rem, 0) rotate(0.8deg);
+  }
+}
+
+.glass-card {
+  --mx: 50%;
+  --my: 50%;
+  --glass-glow: 1;
+  --glass-sheen-opacity: 0;
+
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border: 1px solid transparent;
+  background:
+    linear-gradient(135deg, rgb(252 238 168 / 12%), rgb(0 47 99 / 72%)) padding-box,
+    linear-gradient(125deg, rgb(216 64 47 / 70%), transparent 56%, rgb(252 238 168 / 46%))
+      border-box;
+  box-shadow:
+    inset 0 1px 0 rgb(252 238 168 / 25%),
+    0 1.25rem 3.125rem -1.25rem rgb(0 0 0 / 50%);
+  /* stylelint-disable-next-line property-no-vendor-prefix */
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  backdrop-filter: blur(16px) saturate(140%);
+  transform-style: preserve-3d;
+  will-change: transform, opacity;
+}
+
+.glass-card::before,
+.glass-card::after {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  content: "";
+  pointer-events: none;
+}
+
+.glass-card::before {
+  background:
+    radial-gradient(circle at var(--mx) var(--my), rgb(252 238 168 / 18%), transparent 38%),
+    linear-gradient(
+      118deg,
+      transparent 30%,
+      rgb(252 238 168 / var(--glass-sheen-opacity)) 50%,
+      transparent 70%
+    );
+  opacity: calc(0.15 + var(--glass-glow) * 0.85);
+}
+
+.glass-card::after {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.75'/%3E%3C/svg%3E");
+  background-size: 140px 140px;
+  mix-blend-mode: overlay;
+  opacity: 0.05;
+}
+
+.glass-card > :not(.glass-blobs) {
+  position: relative;
+  z-index: 1;
+}
+
+.glass-card h3 {
+  transform: translateZ(12px);
+}
+
+.glass-card .button {
+  transform: translateZ(20px);
+}
+
+.glass-blobs {
+  position: absolute;
+  z-index: 0;
+  inset: -20%;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.glass-blobs span {
+  position: absolute;
+  width: 11rem;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  filter: blur(40px);
+  opacity: 0.72;
+}
+
+.glass-blobs span:nth-child(1) {
+  top: 2%;
+  left: -6%;
+  background: radial-gradient(circle, var(--coral), transparent 70%);
+}
+
+.glass-blobs span:nth-child(2) {
+  top: 52%;
+  right: -10%;
+  background: radial-gradient(circle, var(--branco), transparent 70%);
+}
+
+.glass-blobs span:nth-child(3) {
+  bottom: -12%;
+  left: 32%;
+  background: radial-gradient(circle, var(--azul-2), transparent 70%);
+}
+
+@supports not (backdrop-filter: blur(1px)) {
+  .glass-card {
+    background: var(--surface-glass);
+  }
+}
+
+@media (width <= 768px) {
+  .glass-card {
+    /* stylelint-disable-next-line property-no-vendor-prefix */
+    -webkit-backdrop-filter: blur(10px) saturate(140%);
+    backdrop-filter: blur(10px) saturate(140%);
   }
 }
 
@@ -1117,7 +1388,6 @@ main .discovery li strong {
   font-style: italic;
 }
 
-.problem,
 .demo,
 .trust {
   position: relative;
@@ -1246,6 +1516,10 @@ body > footer {
   transition:
     transform var(--duration-base) var(--ease-enter),
     border-color var(--duration-fast) var(--ease-standard);
+}
+
+.package-card.glass-card {
+  transform: none;
 }
 
 .package-card.is-active {
@@ -1841,6 +2115,64 @@ footer,
 
   .trust-identity {
     margin-bottom: 0.25rem;
+  }
+}
+
+@media (width <= 768px) {
+  .pill:nth-child(n + 8) {
+    display: none;
+  }
+
+  .ambient-object:nth-of-type(n + 4) {
+    display: none;
+  }
+
+  .ambient-object:nth-of-type(1) {
+    left: 6%;
+  }
+
+  .ambient-object:nth-of-type(2) {
+    left: auto;
+    right: 4%;
+  }
+
+  .ambient-object:nth-of-type(3) {
+    right: 5%;
+  }
+
+  .pill:nth-child(1) {
+    left: 8% !important;
+    top: 8% !important;
+  }
+
+  .pill:nth-child(2) {
+    left: 88% !important;
+    top: 82% !important;
+  }
+
+  .pill:nth-child(3) {
+    left: 84% !important;
+    top: 2% !important;
+  }
+
+  .pill:nth-child(4) {
+    left: 4% !important;
+    top: 91% !important;
+  }
+
+  .pill:nth-child(5) {
+    left: 88% !important;
+    top: 48% !important;
+  }
+
+  .pill:nth-child(6) {
+    left: 92% !important;
+    top: 22% !important;
+  }
+
+  .pill:nth-child(7) {
+    left: 88% !important;
+    top: 68% !important;
   }
 }
 
