@@ -540,6 +540,31 @@ body {
   color: var(--am);
 }
 
+.site-v2 footer a.wa-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: fit-content;
+  margin-top: 18px;
+  padding: 9px 18px 9px 12px;
+  border: 1px solid var(--line);
+  border-radius: 99px;
+  color: var(--iv);
+  font-weight: 600;
+  transition: border-color 0.2s;
+}
+
+.site-v2 footer a.wa-btn:hover,
+.site-v2 footer a.wa-btn:focus-visible {
+  color: var(--iv);
+  border-color: #25d366;
+}
+
+.site-v2 footer a.wa-btn img {
+  width: 22px;
+  height: 22px;
+}
+
 .site-v2 footer button {
   display: block;
   padding: 4px 0;

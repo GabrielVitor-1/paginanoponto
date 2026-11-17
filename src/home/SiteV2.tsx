@@ -215,7 +215,16 @@ export function SiteV2() {
           <a href="mailto:contato@paginaponto.com.br" style={{ color: "var(--am)", marginTop: 16 }}>
             contato@paginaponto.com.br
           </a>
-          <a href="tel:+5534998861525">+55 34 99886-1525</a>
+          <a
+            className="wa-btn"
+            href={whatsapp}
+            target="_blank"
+            rel="noopener"
+            aria-label="Conversar no WhatsApp: +55 34 99886-1525"
+          >
+            <img src="./whatsapp-glyph-official-2026.png" alt="" width={22} height={22} />
+            WhatsApp
+          </a>
         </div>
         <div>
           <h4>Navegação</h4>
