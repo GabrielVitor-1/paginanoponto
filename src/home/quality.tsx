@@ -25,10 +25,28 @@ const forced = (): QualityName | null => {
   return q && q in PROFILES ? (q as QualityName) : null;
 };
 
+let software: boolean | null = null;
+/** True when WebGL runs on a software rasteriser (GPU blocklisted, VMs, old drivers). */
+export function softwareRenderer(): boolean {
+  if (software !== null) return software;
+  software = false;
+  try {
+    const ctx = document.createElement("canvas").getContext("webgl2");
+    const info = ctx?.getExtension("WEBGL_debug_renderer_info");
+    const name = info ? String(ctx!.getParameter(info.UNMASKED_RENDERER_WEBGL)) : "";
+    software = /swiftshader|llvmpipe|softpipe|software|basic render/i.test(name);
+    ctx?.getExtension("WEBGL_lose_context")?.loseContext();
+  } catch {
+    software = false;
+  }
+  return software;
+}
+
 /** Starting profile from device hints; measurements take over afterwards. */
 export function initialQuality(): QualityName {
   const f = forced();
   if (f) return f;
+  if (softwareRenderer()) return "economica";
   const nav = navigator as Navigator & { deviceMemory?: number };
   const cores = nav.hardwareConcurrency ?? 8,
     memory = nav.deviceMemory ?? 8,
@@ -58,6 +76,9 @@ export function ShaderWarmup() {
     gl.debug.checkShaderErrors = import.meta.env.DEV;
   }, [gl]);
   useFrame(() => {
+    // Software rasterisers would spend tens of seconds compiling and drawing everything up front;
+    // they keep the previous on-demand behaviour.
+    if (phase.current === "idle" && softwareRenderer()) phase.current = "done";
     if (phase.current === "idle") {
       // 1) Programs: compile every material while the hero is on screen (linking runs in parallel).
       phase.current = "compiling";
