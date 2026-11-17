@@ -10,8 +10,9 @@ const images = [
     fileName: "chacaras-morro-grande.webp",
   },
   {
-    url: "https://q-cachos.pages.dev/assets/q-cachos-social-1200.jpg",
-    fileName: "q-cachos.webp",
+    // Real capture of the live site (no social image used), 1200×630 like the others.
+    capture: "https://nexbr.vercel.app/",
+    fileName: "nexbr.webp",
   },
   {
     url: "https://doradoces.com.br/assets/brand/og-dora.png",
@@ -32,15 +33,36 @@ async function toWebp(input) {
   throw new Error("A imagem não ficou abaixo de 100 KB sem reduzir demais a qualidade.");
 }
 
+async function download(url) {
+  const response = await fetch(url);
+  if (!response.ok) throw new Error(`Download retornou HTTP ${response.status}.`);
+  return Buffer.from(await response.arrayBuffer());
+}
+
+async function capture(url) {
+  const { chromium } = await import("playwright");
+  const browser = await chromium.launch();
+  try {
+    const page = await browser.newPage({
+      viewport: { width: 1200, height: 630 },
+      deviceScaleFactor: 2,
+    });
+    await page.goto(url, { waitUntil: "networkidle", timeout: 60000 });
+    await page.waitForTimeout(2500);
+    return await page.screenshot({ type: "png" });
+  } finally {
+    await browser.close();
+  }
+}
+
 await mkdir(outputDirectory, { recursive: true });
 
 let failures = 0;
 for (const image of images) {
   try {
-    const response = await fetch(image.url);
-    if (!response.ok) throw new Error(`Download retornou HTTP ${response.status}.`);
-
-    const output = await toWebp(Buffer.from(await response.arrayBuffer()));
+    const output = await toWebp(
+      image.capture ? await capture(image.capture) : await download(image.url),
+    );
     await writeFile(new URL(image.fileName, outputDirectory), output);
     console.log(`${image.fileName}: ${(output.length / 1024).toFixed(1)} KB`);
   } catch (error) {
