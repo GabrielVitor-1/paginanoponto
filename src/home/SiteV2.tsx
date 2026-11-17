@@ -39,16 +39,17 @@ export function SiteV2() {
     <main ref={root} className="site-v2">
       <SiteV2Webgl root={root} targetRef={dot} />
       <nav aria-label="Principal">
-        <b>Página Ponto.</b>
-        <a href="#svc">Serviços</a>
-        <a href="#proj">Projetos</a>
-        <a href="#auto">Automações</a>
-        <a href="#sys">Sistemas</a>
+        <a className="brand" href="#hero" aria-label="Página Ponto — voltar ao início">
+          Página Ponto.
+        </a>
+        <a className="nav-link" href="#proj">
+          Projetos
+        </a>
         <button data-reduced type="button" aria-pressed="false">
           Movimento reduzido
         </button>
         <a className="cta" href="#contato">
-          Iniciar um projeto
+          Contato
         </a>
       </nav>
       <header id="hero" className="sec">
@@ -231,6 +232,9 @@ export function SiteV2() {
           <h4>Institucional</h4>
           <a href="#trust">Como trabalhamos</a>
           <a href="#trust">Perguntas frequentes</a>
+          <button data-reduced type="button" aria-pressed="false">
+            Movimento reduzido
+          </button>
         </div>
         <small>© 2026 Página Ponto. Todos os direitos reservados.</small>
       </footer>

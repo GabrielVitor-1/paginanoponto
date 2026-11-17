@@ -60,10 +60,16 @@ body {
   border-bottom: 1px solid var(--line);
 }
 
-.site-v2 nav b {
+.site-v2 nav .brand {
   font: 900 22px var(--disp);
   letter-spacing: 0.02em;
   margin-right: auto;
+  color: var(--iv);
+  white-space: nowrap;
+}
+
+.site-v2 nav .brand:hover {
+  color: var(--iv);
 }
 
 .site-v2 nav a,
@@ -534,6 +540,19 @@ body {
   color: var(--am);
 }
 
+.site-v2 footer button {
+  display: block;
+  padding: 4px 0;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.site-v2 footer button:hover,
+.site-v2 footer button[aria-pressed="true"] {
+  color: var(--am);
+}
+
 .site-v2 footer .big {
   font: 900 clamp(34px, 4vw, 56px)/0.95 var(--disp);
   text-transform: uppercase;
@@ -615,8 +634,12 @@ body {
     grid-column: 1/-1;
   }
 
-  .site-v2 nav a:not(.cta) {
+  .site-v2 nav [data-reduced] {
     display: none;
+  }
+
+  .site-v2 nav {
+    gap: 18px;
   }
 
   .site-v2 #hero h1 {

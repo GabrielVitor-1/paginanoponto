@@ -19,9 +19,12 @@ import {
 import { Aura, materialPresence, PanelLight, useAura } from "./site-v2-presence";
 import type { AuraUniforms, Presence } from "./site-v2-presence";
 import type { ReliefUniforms } from "./site-v2-relief";
+import { PerfProbe, perfEnabled } from "./perf-probe";
+import { initialQuality, PROFILES, QualityGovernor, ShaderWarmup } from "./quality";
 import "./site-v2-webgl.css";
 
 const MATS = ["Tinta", "Vidro", "Mercúrio", "Plasma", "Módulo"];
+const CLOSING_LIGHTS = [60, 40, 14] as const;
 const SLOT_SECONDS = 2.8; // one material per 2.8 s, as in the approved prototype
 const CORE_WORLD_RADIUS = 0.5; // same visual size as the previous closing core (.58 × .86)
 const clamp = (value: number) => Math.min(1, Math.max(0, value));
@@ -77,6 +80,7 @@ type Shared = {
   closing: MutableRefObject<number>;
   reveal: MutableRefObject<number>;
   relief: ReliefUniforms | null; // null when the relief is disabled (?fundo=0)
+  trail: ReliefTrail;
 };
 
 const JOURNEY_CAMERA = new THREE.Vector3(0, 0, 5.2);
@@ -123,7 +127,6 @@ function Director({
     dockBase: 0,
     pointer: { x: 0, y: 0 },
     light: null as null | { x: number; y: number },
-    trail: new ReliefTrail(),
     panelLight: new PanelLight(),
     presence: { color: new THREE.Vector3(), glow: 0, rays: 0, emit: 0 } as Presence,
   });
@@ -161,12 +164,31 @@ function Director({
       s.pointer.x = event.clientX / innerWidth - 0.5;
       s.pointer.y = event.clientY / innerHeight - 0.5;
     };
-    const button = host.querySelector<HTMLButtonElement>("[data-reduced]"),
+    const buttons = [...host.querySelectorAll<HTMLButtonElement>("[data-reduced]")],
       skip = host.querySelector<HTMLButtonElement>("[data-skip]");
-    button?.setAttribute("aria-pressed", String(reduced.current));
+    const syncPressed = () =>
+      buttons.forEach((b) => b.setAttribute("aria-pressed", String(reduced.current)));
+    syncPressed();
     const toggleReduced = () => {
       reduced.current = !reduced.current;
-      button?.setAttribute("aria-pressed", String(reduced.current));
+      syncPressed();
+    };
+    // In-page links (brand → hero, Projetos, Contato…): smooth unless motion is reduced.
+    const onAnchor = (event: MouseEvent) => {
+      const link = (event.target as Element | null)?.closest<HTMLAnchorElement>('a[href^="#"]');
+      if (!link || event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey)
+        return;
+      const id = link.getAttribute("href")!.slice(1),
+        target = id ? document.getElementById(id) : null;
+      if (!target) return;
+      event.preventDefault();
+      const behavior: ScrollBehavior = reduced.current ? "auto" : "smooth";
+      scrollTo({ top: id === "hero" ? 0 : target.getBoundingClientRect().top + scrollY, behavior });
+      history.replaceState(
+        null,
+        "",
+        id === "hero" ? location.pathname + location.search : `#${id}`,
+      );
     };
     const onSkip = () => {
       measure();
@@ -179,20 +201,23 @@ function Director({
     observer.observe(host);
     addEventListener("resize", measure);
     addEventListener("mousemove", onPointer);
-    button?.addEventListener("click", toggleReduced);
+    buttons.forEach((b) => b.addEventListener("click", toggleReduced));
     skip?.addEventListener("click", onSkip);
+    host.addEventListener("click", onAnchor);
     document.fonts?.ready.then(measure);
     measure();
     return () => {
       observer.disconnect();
       removeEventListener("resize", measure);
       removeEventListener("mousemove", onPointer);
-      button?.removeEventListener("click", toggleReduced);
+      buttons.forEach((b) => b.removeEventListener("click", toggleReduced));
       skip?.removeEventListener("click", onSkip);
+      host.removeEventListener("click", onAnchor);
     };
   }, [root, reduced]);
 
   useFrame((frame, delta) => {
+    const perfStart = performance.now();
     const s = state.current,
       w = size.width,
       h = size.height,
@@ -307,21 +332,22 @@ function Director({
       light.x += (tx - light.x) * follow;
       light.y += (ty - light.y) * follow;
       const lightR = THREE.MathUtils.clamp(sr * 2.4, mobile ? 100 : 150, mobile ? 320 : 560);
-      s.trail.update(light.x, light.y, lightR, dt, R);
-      s.trail.write(relief);
+      shared.trail.update(light.x, light.y, lightR, dt, R);
+      shared.trail.write(relief);
       relief.uLive.value.set(light.x, light.y, lightR, 1);
       relief.uScroll.value = scrollY;
       relief.uRes.value.set(w, h);
       relief.uDpr.value = frame.viewport.dpr;
       relief.uPulse.value = R ? 1 : 1 + 0.06 * Math.sin(frame.clock.elapsedTime * 0.9);
-      (window as Window & { __ppRelief?: unknown }).__ppRelief = {
-        dpr: relief.uDpr.value,
-        res: relief.uRes.value.toArray(),
-        scroll: relief.uScroll.value,
-        live: relief.uLive.value.toArray(),
-        count: relief.uCount.value,
-        trail: s.trail.points.map((q) => q.toArray()),
-      };
+      if (perfEnabled())
+        (window as Window & { __ppRelief?: unknown }).__ppRelief = {
+          dpr: relief.uDpr.value,
+          res: relief.uRes.value.toArray(),
+          scroll: relief.uScroll.value,
+          live: relief.uLive.value.toArray(),
+          count: relief.uCount.value,
+          trail: shared.trail.points.map((q) => q.toArray()),
+        };
       // The relief stays alive through the closing (no dead plane); a short cool pulse marks the collapse.
       relief.uIntensity.value =
         (1 - 0.25 * (R ? E : band(entry, 0.25, 1))) *
@@ -405,7 +431,7 @@ function Director({
       shared.corona.current.uniforms["uGlow"]!.value =
         presence * (0.2 + 0.75 * suction * (1 - post) + 1.8 * impact);
     shared.lights.current?.forEach((light, i) => {
-      if (light) light.intensity = [60, 40, 14][i]! * world;
+      if (light) light.intensity = CLOSING_LIGHTS[i]! * world;
     });
 
     // ── Signature DOM, driven by the same timeline. ──
@@ -435,6 +461,8 @@ function Director({
       materialName,
       reduced: R,
     };
+    const perf = (window as Window & { __ppPerf?: { directorMs: number[] } }).__ppPerf;
+    if (perf) perf.directorMs.push(performance.now() - perfStart);
   }, -1);
   return null;
 }
@@ -471,6 +499,7 @@ function JourneyScene({
     closing: useRef(0),
     reveal: useRef(0),
     relief: useReliefUniforms(),
+    trail: useMemo(() => new ReliefTrail(), []),
   };
   const reliefOn = useMemo(
     () =>
@@ -493,6 +522,9 @@ function JourneyScene({
   return (
     <>
       <Director root={root} targetRef={targetRef} reduced={reduced} shared={shared} />
+      <ShaderWarmup />
+      <QualityGovernor trail={shared.trail} />
+      {perfEnabled() && <PerfProbe />}
       {reliefOn && shared.relief && <ReliefBackground uniforms={shared.relief} />}
       <ambientLight intensity={0.05} />
       <spotLight position={[3, 6, 2]} angle={0.4} penumbra={1} intensity={60} color="#fff4e8" />
@@ -622,7 +654,7 @@ export function SiteV2Webgl({
   return (
     <Canvas
       className="site-v2-webgl-world"
-      dpr={[1, 1.5]}
+      dpr={Math.min(window.devicePixelRatio || 1, PROFILES[initialQuality()].dpr)}
       camera={{ position: [0, 0, 5.2], fov: 32 }}
       gl={gl}
       onCreated={({ gl: renderer }) => renderer.setClearColor(0x000000, 0)}

@@ -302,6 +302,8 @@ export function Morph({
     const place = (mesh: THREE.InstancedMesh | null, list: Vox[], size: number, live: boolean) => {
       if (!mesh) return;
       mesh.visible = wm > 0.002;
+      // Perf: the ~2,200 voxels are only repositioned while the Módulo is actually visible.
+      if (!mesh.visible) return;
       list.forEach((v, i) => {
         const local = THREE.MathUtils.clamp(wm * 1.7 - v.seed * 0.7, 0, 1);
         const breath = live ? Math.max(0, Math.sin(t * 0.6 + v.seed * 40)) ** 6 * VOX * 0.5 : 0;

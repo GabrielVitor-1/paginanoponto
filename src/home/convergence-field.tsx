@@ -107,6 +107,11 @@ function Fragment({
     roll = (seeded(index + 7) - 0.5) * 0.5;
   useFrame(({ clock }) => {
     if (!group.current || !inner.current) return;
+    // Perf: nothing to compute until the convergence reveals its fragments.
+    if (reveal.current <= 0.001) {
+      group.current.visible = false;
+      return;
+    }
     const t = progress.current,
       o = capture(
         t,

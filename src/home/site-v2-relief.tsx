@@ -235,15 +235,18 @@ export function useReliefUniforms(): ReliefUniforms {
 /** Page-space trail of the nucleus. Points are pushed by distance, energies decay with time. */
 export class ReliefTrail {
   points: THREE.Vector4[] = [];
+  /** Samples kept (quality profile). Fewer samples are spaced further apart, so the trail keeps its length. */
+  maxPoints: number = RELIEF.trailPoints;
+  private pool: THREE.Vector4[] = [];
   update(x: number, y: number, radius: number, dt: number, reduced: boolean) {
     const decay = Math.exp(-dt / RELIEF.trailSeconds);
     for (const p of this.points) p.w *= decay;
-    while (this.points.length && this.points[0]!.w < 0.01) this.points.shift();
+    while (this.points.length && this.points[0]!.w < 0.01) this.pool.push(this.points.shift()!);
     const last = this.points[this.points.length - 1];
-    const spacing = Math.max(14, radius * 0.3);
+    const spacing = Math.max(14, radius * 0.3) * (RELIEF.trailPoints / this.maxPoints);
     if (!reduced && (!last || Math.hypot(x - last.x, y - last.y) > spacing)) {
-      this.points.push(new THREE.Vector4(x, y, radius, 1));
-      if (this.points.length > RELIEF.trailPoints) this.points.shift();
+      this.points.push((this.pool.pop() ?? new THREE.Vector4()).set(x, y, radius, 1));
+      while (this.points.length > this.maxPoints) this.pool.push(this.points.shift()!);
     }
   }
   write(u: ReliefUniforms) {
