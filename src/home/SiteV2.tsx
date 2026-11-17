@@ -133,7 +133,10 @@ export function SiteV2() {
       </section>
       <section id="sys" className="sec">
         <h2 data-r>Sistemas sob medida</h2>
-        <p className="lead">Ferramentas construídas para o jeito como o seu negócio trabalha.</p>
+        <p className="lead">
+          Processos, clientes e dados reunidos num só ponto — num sistema feito para o seu negócio
+          crescer.
+        </p>
         <div className="pans">
           {[
             ["Sistemas personalizados", "Cada regra do seu processo, no lugar certo."],
@@ -196,12 +199,10 @@ export function SiteV2() {
               <span ref={dot} className="dot" data-dot />
             </h2>
           </div>
-          <p className="cap">Tudo o que apareceu na página volta para o mesmo núcleo.</p>
           <button className="skip" data-skip type="button">
             Pular animação
           </button>
           <p className="tag">Tudo num só ponto.</p>
-          <p className="mat" />
         </div>
       </section>
       <footer id="contato">
@@ -238,12 +239,6 @@ export function SiteV2() {
         </div>
         <small>© 2026 Página Ponto. Todos os direitos reservados.</small>
       </footer>
-      <div className="site-v2-ind" aria-hidden="true">
-        <span data-ind-label>Tinta</span>
-        <i>
-          <b data-ind-bar />
-        </i>
-      </div>
     </main>
   );
 }
