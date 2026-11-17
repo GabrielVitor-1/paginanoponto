@@ -122,7 +122,9 @@ export function QualityGovernor({ trail }: { trail: ReliefTrail }) {
     state.current.q = q;
     trail.maxPoints = PROFILES[q].trail;
     setDpr(cappedDpr(q));
-    (window as Window & { __ppQuality?: QualityName }).__ppQuality = q;
+    const w = window as Window & { __ppQuality?: QualityName; __ppQualityChanges?: number };
+    if (w.__ppQuality !== undefined) w.__ppQualityChanges = (w.__ppQualityChanges ?? 0) + 1;
+    w.__ppQuality = q;
   };
   useEffect(() => {
     apply(initialQuality());
