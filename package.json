@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
-    "build": "vite build",
+    "build": "vite build && node scripts/prerender.mjs",
     "preview": "vite preview --host 0.0.0.0",
     "portfolio:miniaturas": "node scripts/atualizar-miniaturas.mjs",
     "lint": "npm run lint:js && npm run lint:css && npm run lint:html",

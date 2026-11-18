@@ -684,3 +684,24 @@ body {
     transition: none;
   }
 }
+
+/* Without WebGL (unsupported or failed) the page stays complete: the signature is shown as text
+   with an amber point, and the controls that only drive the 3D world are hidden. */
+.site-v2.no-webgl #conv {
+  height: 100vh;
+}
+
+.site-v2.no-webgl .mark h2,
+.site-v2.no-webgl .tag {
+  opacity: 1;
+}
+
+.site-v2.no-webgl .dot {
+  border-radius: 50%;
+  background: var(--am);
+}
+
+.site-v2.no-webgl .skip,
+.site-v2.no-webgl [data-reduced] {
+  display: none;
+}

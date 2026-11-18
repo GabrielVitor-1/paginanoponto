@@ -1,6 +1,6 @@
-import { useRef } from "react";
+import { Component, lazy, Suspense, useEffect, useRef, useState } from "react";
+import type { ReactNode } from "react";
 import { linkWhats, whatsappMessages } from "../whatsapp";
-import { SiteV2Webgl } from "./site-v2-webgl";
 import "./preflight.css";
 import "./site-v2.css";
 
@@ -32,12 +32,62 @@ const projects = [
   ],
 ];
 const whatsapp = linkWhats(whatsappMessages.geral);
+
+// The 3D world (three.js, ~1 MB) is a separate chunk loaded after the page's own HTML is on
+// screen, so the content is readable and clickable before WebGL starts.
+const SiteV2Webgl = lazy(() => import("./site-v2-webgl"));
+
+const hasWebgl2 = () => {
+  try {
+    const ctx = document.createElement("canvas").getContext("webgl2");
+    ctx?.getExtension("WEBGL_lose_context")?.loseContext();
+    return !!ctx;
+  } catch {
+    return false;
+  }
+};
+
+/** If WebGL fails (no GPU, lost context, blocked), the page stays readable instead of blank. */
+class WebglBoundary extends Component<{ onFail: () => void; children: ReactNode }> {
+  override state = { failed: false };
+  static getDerivedStateFromError() {
+    return { failed: true };
+  }
+  override componentDidCatch() {
+    this.props.onFail();
+  }
+  override render() {
+    return this.state.failed ? null : this.props.children;
+  }
+}
+
 export function SiteV2() {
   const root = useRef<HTMLElement>(null),
     dot = useRef<HTMLSpanElement>(null);
+  // "wait" is also what the prerendered HTML contains, so hydration matches exactly.
+  const [world, setWorld] = useState<"wait" | "on" | "off">("wait");
+  useEffect(() => {
+    if (!hasWebgl2()) {
+      setWorld("off");
+      return;
+    }
+    // Let the browser paint the page first, then start loading the 3D world.
+    let timer = 0;
+    const frame = requestAnimationFrame(() => (timer = window.setTimeout(() => setWorld("on"))));
+    return () => {
+      cancelAnimationFrame(frame);
+      clearTimeout(timer);
+    };
+  }, []);
   return (
-    <main ref={root} className="site-v2">
-      <SiteV2Webgl root={root} targetRef={dot} />
+    <main ref={root} className={world === "off" ? "site-v2 no-webgl" : "site-v2"}>
+      {world === "on" && (
+        <WebglBoundary onFail={() => setWorld("off")}>
+          <Suspense fallback={null}>
+            <SiteV2Webgl root={root} targetRef={dot} />
+          </Suspense>
+        </WebglBoundary>
+      )}
       <nav aria-label="Principal">
         <a className="brand" href="#hero" aria-label="Página Ponto — voltar ao início">
           Página Ponto.
