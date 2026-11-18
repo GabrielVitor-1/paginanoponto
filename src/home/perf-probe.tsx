@@ -106,6 +106,9 @@ export function PerfProbe() {
       },
     };
     gl.info.autoReset = false;
+    // Development only (stripped from production builds): lets profiling scripts toggle objects.
+    if (import.meta.env.DEV)
+      (window as Window & { __ppThree?: unknown }).__ppThree = { gl, scene, camera };
 
     // Canvas resizes (e.g. the mobile toolbar showing/hiding) reallocate every GPU buffer.
     const canvas = gl.domElement;
@@ -202,7 +205,7 @@ export function PerfProbe() {
       longTaskWatch?.disconnect();
       panel.box.remove();
     };
-  }, [gl, state]);
+  }, [gl, state, scene, camera]);
   // Runs first: marks the start of the frame's JS work.
   useFrame(() => {
     const p = (window as PerfWindow).__ppPerf;

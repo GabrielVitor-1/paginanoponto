@@ -1,8 +1,12 @@
 .site-v2-webgl-world {
   position: fixed !important;
-  inset: 0;
+  inset: 0 auto auto 0;
   width: 100% !important;
-  height: 100% !important;
+
+  /* Large-viewport height: the mobile toolbar showing/hiding no longer resizes the canvas (each
+     resize reallocates every GPU buffer mid-scroll). Same size as before on desktop. */
+  height: 100vh !important;
+  height: 100lvh !important; /* stylelint-disable-line declaration-block-no-duplicate-properties */
   z-index: 1;
   pointer-events: none;
 }

@@ -103,12 +103,15 @@ export function Aura({ material }: { material: THREE.ShaderMaterial }) {
   );
 }
 
+/** Viewport box of a card (cached page geometry minus the scroll; no layout read per frame). */
+export type PanelRect = { left: number; right: number; top: number; bottom: number };
+
 /** Light leaking onto the HTML cards (`.pan`) the sphere passes behind: edges and surfaces pick up its colour. */
 export class PanelLight {
   private last: string[] = [];
   update(
     panels: HTMLElement[],
-    rects: DOMRect[],
+    rects: PanelRect[],
     x: number,
     y: number,
     r: number,

@@ -1,29 +1,57 @@
 // Rendering quality without changing the experience:
 // - ShaderWarmup compiles every material once, at load, so no material freezes the page the
 //   first time it appears (measured: 250–1,200 ms stalls on first scroll).
-// - QualityGovernor adapts the internal resolution (DPR) and the relief's trail samples to the
-//   device, with hysteresis so the profile never flickers back and forth.
+// - QualityGovernor adapts the internal resolution (DPR), the glass refraction buffer and the
+//   relief's trail samples to the device, with hysteresis so the profile never flickers.
+// - geometryDetail() sizes the sphere meshes to the largest size they can reach on this screen.
 import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useRef } from "react";
 import type * as THREE from "three";
 import type { ReliefTrail } from "./site-v2-relief";
 
 export type QualityName = "alta" | "equilibrada" | "economica";
-type Profile = { dpr: number; trail: number };
+/** dpr: cap of the canvas resolution · trail: relief trail samples · transmission: resolution of
+ *  the buffer the Vidro refracts (the relief behind the glass; the sphere itself stays sharp). */
+type Profile = { dpr: number; trail: number; transmission: number };
 /** Alta: full experience · Equilibrada: same experience, lower internal resolution ·
  *  Econômica: same narrative and effects, resolution 1× and fewer trail samples. */
 export const PROFILES: Record<QualityName, Profile> = {
-  alta: { dpr: 1.5, trail: 16 },
-  equilibrada: { dpr: 1.25, trail: 16 },
-  economica: { dpr: 1, trail: 10 },
+  alta: { dpr: 1.5, trail: 16, transmission: 1 },
+  equilibrada: { dpr: 1.25, trail: 16, transmission: 0.75 },
+  economica: { dpr: 1, trail: 10, transmission: 0.5 },
 };
 const ORDER: QualityName[] = ["alta", "equilibrada", "economica"];
 
+let forcedQuality: QualityName | null | undefined;
+/** `?qualidade=` override, read once (it was parsed on every frame). */
 const forced = (): QualityName | null => {
+  if (forcedQuality !== undefined) return forcedQuality;
   if (typeof window === "undefined") return null;
   const q = new URLSearchParams(location.search).get("qualidade");
-  return q && q in PROFILES ? (q as QualityName) : null;
+  return (forcedQuality = q && q in PROFILES ? (q as QualityName) : null);
 };
+
+let detail: number | null = null;
+/** 0.35..1 — share of the approved sphere tessellation this screen needs. The meshes were sized
+ *  for a desktop sphere ~600 device px wide; on a phone it peaks near ~140 px, where the extra
+ *  triangles are sub-pixel (pure GPU cost, no visible difference). Keeps the silhouette's
+ *  polygon error under 0.15 device px at the largest size the sphere reaches on this screen. */
+export function geometryDetail(): number {
+  if (detail !== null) return detail;
+  if (typeof window === "undefined") return (detail = 1);
+  const sw = screen.width || innerWidth,
+    sh = screen.height || innerHeight;
+  // Largest the window could become here (rotation, resizing): never coarser than needed.
+  const minSide = Math.max(Math.min(innerWidth, innerHeight), Math.min(sw, sh)),
+    mobile = Math.max(innerWidth, sw) < 800;
+  const radius =
+    0.3 * minSide * 1.25 * (mobile ? 0.62 : 1) * Math.min(devicePixelRatio || 1, PROFILES.alta.dpr);
+  const segments = Math.PI / Math.acos(1 - 0.15 / Math.max(radius, 1));
+  return (detail = Math.min(1, Math.max(0.35, segments / 128)));
+}
+/** Approved segment count scaled by geometryDetail(). */
+export const seg = (approved: number, min = 12) =>
+  Math.max(min, Math.round(approved * geometryDetail()));
 
 let software: boolean | null = null;
 /** True when WebGL runs on a software rasteriser (GPU blocklisted, VMs, old drivers). */
@@ -63,13 +91,20 @@ export function ShaderWarmup() {
   const phase = useRef<"idle" | "compiling" | "draw" | "done">("idle");
   const reveal = () => {
     const changed: { o: THREE.Object3D; visible: boolean; culled: boolean }[] = [];
+    const materials: THREE.Material[] = [];
     scene.traverse((o) => {
       changed.push({ o, visible: o.visible, culled: o.frustumCulled });
       o.visible = true;
       o.frustumCulled = false;
+      // Layers hidden through their material (zero-glow closing layers) are warmed up too.
+      const m = (o as THREE.Mesh).material;
+      (Array.isArray(m) ? m : m ? [m] : []).forEach((x) => !x.visible && materials.push(x));
     });
-    return () =>
+    materials.forEach((m) => (m.visible = true));
+    return () => {
       changed.forEach((c) => ((c.o.visible = c.visible), (c.o.frustumCulled = c.culled)));
+      materials.forEach((m) => (m.visible = false));
+    };
   };
   useEffect(() => {
     // Error checking forces the main thread to wait for each shader link; keep it for development.
@@ -106,7 +141,7 @@ export function ShaderWarmup() {
 }
 
 export function QualityGovernor({ trail }: { trail: ReliefTrail }) {
-  const { setDpr } = useThree();
+  const { setDpr, gl } = useThree();
   const state = useRef({
     q: "alta" as QualityName,
     samples: [] as number[],
@@ -121,6 +156,7 @@ export function QualityGovernor({ trail }: { trail: ReliefTrail }) {
   const apply = (q: QualityName) => {
     state.current.q = q;
     trail.maxPoints = PROFILES[q].trail;
+    gl.transmissionResolutionScale = PROFILES[q].transmission;
     setDpr(cappedDpr(q));
     const w = window as Window & { __ppQuality?: QualityName; __ppQualityChanges?: number };
     if (w.__ppQuality !== undefined) w.__ppQualityChanges = (w.__ppQualityChanges ?? 0) + 1;

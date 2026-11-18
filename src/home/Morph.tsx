@@ -3,6 +3,7 @@ import { useFrame } from "@react-three/fiber";
 import { MeshDistortMaterial } from "@react-three/drei";
 import * as THREE from "three";
 import { stateWeight } from "./states";
+import { seg } from "./quality";
 
 const R = 1;
 const NOISE = /* glsl */ `
@@ -223,7 +224,7 @@ export function Morph({
   );
   const plasmaU = useMemo(() => ({ uTime: { value: 0 }, uOpacity: { value: 0 } }), []);
   const haloU = useMemo(() => ({ uOpacity: { value: 0 } }), []);
-  const tmp = useMemo(() => new THREE.Object3D(), []);
+  const weights = useMemo(() => [0, 0, 0, 0, 0], []);
 
   useEffect(() => {
     if (tilesMesh.current) {
@@ -242,10 +243,8 @@ export function Morph({
     shown.current += (progress.current - shown.current) * (1 - Math.exp(-6 * dt));
     const p = shown.current;
     const t = state.clock.elapsedTime;
-    const [w0, w1, w2, w3, w4] = [0, 1, 2, 3, 4].map((i) =>
-      cyclic ? cyclicMaterialWeight(p, i) : stateWeight(p, i),
-    ) as [number, number, number, number, number];
-    const w = [w0, w1, w2, w3, w4] as const;
+    const w = weights; // reused every frame (no per-frame arrays)
+    for (let i = 0; i < 5; i++) w[i] = cyclic ? cyclicMaterialWeight(p, i) : stateWeight(p, i);
     const orn = ornament ? THREE.MathUtils.clamp(ornament.current, 0, 1) : signature ? 0 : 1;
 
     if (group.current) {
@@ -260,11 +259,11 @@ export function Morph({
       const mat = m.material as THREE.Material & { opacity: number };
       mat.opacity = wt;
     };
-    setLayer(ink.current, w[0]);
-    setLayer(glass.current, w[1], 1.001);
-    if (glass.current) (glass.current.material as THREE.MeshPhysicalMaterial).transmission = w[1];
-    setLayer(merc.current, w[2], 1.002);
-    setLayer(plasma.current, w[3]);
+    setLayer(ink.current, w[0]!);
+    setLayer(glass.current, w[1]!, 1.001);
+    if (glass.current) (glass.current.material as THREE.MeshPhysicalMaterial).transmission = w[1]!;
+    setLayer(merc.current, w[2]!, 1.002);
+    setLayer(plasma.current, w[3]!);
     if (plasma.current) {
       const u = (plasma.current.material as THREE.ShaderMaterial).uniforms;
       u["uTime"]!.value = t;
@@ -272,27 +271,28 @@ export function Morph({
     }
     if (halo.current)
       (halo.current.material as THREE.ShaderMaterial).uniforms["uOpacity"]!.value = w[3];
-    if (plasma.current) plasma.current.visible = w[3] > 0.002;
+    if (plasma.current) plasma.current.visible = w[3]! > 0.002;
     if (halo.current) {
-      halo.current.visible = w[3] > 0.002;
+      halo.current.visible = w[3]! > 0.002;
       halo.current.scale.setScalar(1.07 + Math.sin(t * 2) * 0.008);
     }
 
     // Module: tiles assemble on the surface, then drift slightly outward.
-    const wm = w[4];
+    const wm = w[4]!;
     if (ring.current) {
-      ring.current.visible = orn > 0.002 && w[0] > 0.002;
-      (ring.current.material as THREE.MeshStandardMaterial).opacity = w[0] * orn;
+      ring.current.visible = orn > 0.002 && w[0]! > 0.002;
+      (ring.current.material as THREE.MeshStandardMaterial).opacity = w[0]! * orn;
       ring.current.rotation.z = 0.35 + Math.sin(t * 0.3) * 0.03;
-      ring.current.scale.setScalar(0.9 + 0.1 * w[0]);
+      ring.current.scale.setScalar(0.9 + 0.1 * w[0]!);
     }
     if (drops.current) {
-      drops.current.visible = orn > 0.002 && w[2] > 0.002;
+      const w2 = w[2]!;
+      drops.current.visible = orn > 0.002 && w2 > 0.002;
       drops.current.children.forEach((c, i) => {
         const a = t * (0.45 + i * 0.08) + i * 1.3;
-        const r = 1.35 + i * 0.12 + (1 - w[2]) * -0.4;
+        const r = 1.35 + i * 0.12 + (1 - w2) * -0.4;
         c.position.set(Math.cos(a) * r, Math.sin(a * 1.3 + i) * 0.35, Math.sin(a) * r);
-        c.scale.setScalar((0.05 + (i % 3) * 0.03) * w[2] * orn);
+        c.scale.setScalar((0.05 + (i % 3) * 0.03) * w2 * orn);
       });
     }
     if (core.current) {
@@ -304,19 +304,28 @@ export function Morph({
       mesh.visible = wm > 0.002;
       // Perf: the ~2,200 voxels are only repositioned while the Módulo is actually visible.
       if (!mesh.visible) return;
-      list.forEach((v, i) => {
+      // Perf: the matrices are written straight into the instance buffer. With no rotation and a
+      // uniform scale, Object3D.updateMatrix() produced exactly diag(s, s, s) + translation.
+      const m = mesh.instanceMatrix.array as Float32Array;
+      for (let i = 0; i < list.length; i++) {
+        const v = list[i]!;
         const local = THREE.MathUtils.clamp(wm * 1.7 - v.seed * 0.7, 0, 1);
         const breath = live ? Math.max(0, Math.sin(t * 0.6 + v.seed * 40)) ** 6 * VOX * 0.5 : 0;
-        const out = v.ext + breath + (1 - local) * 0.35;
-        tmp.position
-          .copy(v.pos)
-          .addScaledVector(v.n, out)
-          .addScaledVector(v.pos, (1 - local) * 0.25);
-        tmp.quaternion.identity();
-        tmp.scale.setScalar(VOX * size * (0.4 + 0.6 * local));
-        tmp.updateMatrix();
-        mesh.setMatrixAt(i, tmp.matrix);
-      });
+        const out = v.ext + breath + (1 - local) * 0.35,
+          k = (1 - local) * 0.25,
+          s = VOX * size * (0.4 + 0.6 * local),
+          o = i * 16;
+        m[o] = s;
+        m[o + 1] = m[o + 2] = m[o + 3] = m[o + 4] = 0;
+        m[o + 5] = s;
+        m[o + 6] = m[o + 7] = m[o + 8] = m[o + 9] = 0;
+        m[o + 10] = s;
+        m[o + 11] = 0;
+        m[o + 12] = v.pos.x + v.n.x * out + v.pos.x * k;
+        m[o + 13] = v.pos.y + v.n.y * out + v.pos.y * k;
+        m[o + 14] = v.pos.z + v.n.z * out + v.pos.z * k;
+        m[o + 15] = 1;
+      }
       mesh.instanceMatrix.needsUpdate = true;
     };
     place(tilesMesh.current, tiles, 0.93, true);
@@ -326,7 +335,7 @@ export function Morph({
   return (
     <group ref={group}>
       <mesh ref={ring} rotation-x={Math.PI / 2.25}>
-        <torusGeometry args={[1.45, 0.006, 16, 256]} />
+        <torusGeometry args={[1.45, 0.006, 16, seg(256)]} />
         <meshStandardMaterial
           color="#000"
           emissive="#e0a95a"
@@ -338,7 +347,7 @@ export function Morph({
       <group ref={drops}>
         {[0, 1, 2, 3, 4, 5].map((i) => (
           <mesh key={i}>
-            <sphereGeometry args={[1, 48, 48]} />
+            <sphereGeometry args={[1, seg(48), seg(48)]} />
             <meshStandardMaterial
               color="#f4f6f8"
               metalness={1}
@@ -350,7 +359,7 @@ export function Morph({
       </group>
       {/* 1 · Tinta */}
       <mesh ref={ink} castShadow>
-        <sphereGeometry args={[R, 128, 128]} />
+        <sphereGeometry args={[R, seg(128), seg(128)]} />
         <meshPhysicalMaterial
           color="#060606"
           roughness={0.55}
@@ -368,7 +377,7 @@ export function Morph({
       </mesh>
       {/* 2 · Vidro */}
       <mesh ref={glass}>
-        <sphereGeometry args={[R, 128, 128]} />
+        <sphereGeometry args={[R, seg(128), seg(128)]} />
         <meshPhysicalMaterial
           color="#ffffff"
           roughness={0.0}
@@ -392,7 +401,7 @@ export function Morph({
       </mesh>
       {/* 3 · Mercúrio */}
       <mesh ref={merc}>
-        <sphereGeometry args={[R, 192, 192]} />
+        <sphereGeometry args={[R, seg(192), seg(192)]} />
         <MeshDistortMaterial
           color="#f4f6f8"
           metalness={1}
@@ -405,7 +414,7 @@ export function Morph({
       </mesh>
       {/* 4 · Plasma */}
       <mesh ref={plasma}>
-        <sphereGeometry args={[R, 160, 160]} />
+        <sphereGeometry args={[R, seg(160), seg(160)]} />
         <shaderMaterial
           vertexShader={plasmaVert}
           fragmentShader={plasmaFrag}
@@ -415,7 +424,7 @@ export function Morph({
         />
       </mesh>
       <mesh ref={halo}>
-        <sphereGeometry args={[R, 64, 64]} />
+        <sphereGeometry args={[R, seg(64), seg(64)]} />
         <shaderMaterial
           vertexShader={haloVert}
           fragmentShader={haloFrag}
@@ -429,7 +438,7 @@ export function Morph({
       </mesh>
       {/* 5 · Módulo */}
       <mesh ref={core}>
-        <sphereGeometry args={[R * 0.86, 64, 64]} />
+        <sphereGeometry args={[R * 0.86, seg(64), seg(64)]} />
         <meshStandardMaterial color="#020203" roughness={1} transparent />
       </mesh>
       <instancedMesh ref={tilesMesh} args={[undefined, undefined, tiles.length]} castShadow>

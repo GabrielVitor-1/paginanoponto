@@ -4,7 +4,7 @@
 // hidden or swapped while the sphere travels, converges and docks into the logo.
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Environment, Lightformer } from "@react-three/drei";
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { MutableRefObject, RefObject } from "react";
 import * as THREE from "three";
 import { Morph } from "./Morph";
@@ -12,19 +12,27 @@ import { COLLAPSE_AT, ConvergenceField } from "./convergence-field";
 import { WP } from "./waypoints";
 import {
   getReliefTextures,
+  loadReliefData,
   ReliefBackground,
   ReliefTrail,
   useReliefUniforms,
 } from "./site-v2-relief";
 import { Aura, materialPresence, PanelLight, useAura } from "./site-v2-presence";
-import type { AuraUniforms, Presence } from "./site-v2-presence";
+import type { AuraUniforms, PanelRect, Presence } from "./site-v2-presence";
 import type { ReliefUniforms } from "./site-v2-relief";
 import { PerfProbe, perfEnabled } from "./perf-probe";
-import { initialQuality, PROFILES, QualityGovernor, ShaderWarmup } from "./quality";
+import { initialQuality, PROFILES, QualityGovernor, seg, ShaderWarmup } from "./quality";
 import "./site-v2-webgl.css";
+
+// Starts as soon as this chunk loads, in parallel with React mounting the page.
+const reliefPixels = typeof window === "undefined" ? Promise.resolve() : loadReliefData();
 
 const MATS = ["Tinta", "Vidro", "Mercúrio", "Plasma", "Módulo"];
 const CLOSING_LIGHTS = [60, 40, 14] as const;
+/** Journey intensity of the same lights. The closing rig used to duplicate the two journey spot
+ *  lights (same position, cone, colour); light is additive, so one light per position carrying the
+ *  summed intensity renders the same pixels with two fewer lights in every lit shader. */
+const JOURNEY_LIGHTS = [60, 40, 0] as const;
 const SLOT_SECONDS = 2.8; // one material per 2.8 s, as in the approved prototype
 const CORE_WORLD_RADIUS = 0.5; // same visual size as the previous closing core (.58 × .86)
 const clamp = (value: number) => Math.min(1, Math.max(0, value));
@@ -129,6 +137,13 @@ function Director({
     light: null as null | { x: number; y: number },
     panelLight: new PanelLight(),
     presence: { color: new THREE.Vector3(), glow: 0, rays: 0, emit: 0 } as Presence,
+    // Page-space geometry of the `.pan` cards and #sys, refreshed on resize (not read per frame).
+    panelBoxes: [] as { left: number; width: number; top: number; height: number }[],
+    panelRects: [] as PanelRect[],
+    sysTop: 0,
+    sysBottom: 0,
+    dot: { x: 0, y: 0, r: 0 },
+    stage: null as Stage | null,
   });
   const dom = useRef<{
     mark?: HTMLElement | null;
@@ -159,6 +174,14 @@ function Director({
       const conv = host.querySelector<HTMLElement>("#conv")!.getBoundingClientRect();
       s.convTop = conv.top + scrollY;
       s.convHeight = conv.height;
+      const sysRect = dom.current.sys?.getBoundingClientRect();
+      s.sysTop = sysRect ? sysRect.top + scrollY : 0;
+      s.sysBottom = sysRect ? sysRect.bottom + scrollY : 0;
+      s.panelBoxes = (dom.current.panels ?? []).map((panel) => {
+        const r = panel.getBoundingClientRect();
+        return { left: r.left, width: r.width, top: r.top + scrollY, height: r.height };
+      });
+      s.panelRects = s.panelBoxes.map(() => ({ left: 0, right: 0, top: 0, bottom: 0 }));
     };
     const onPointer = (event: MouseEvent) => {
       s.pointer.x = event.clientX / innerWidth - 0.5;
@@ -292,10 +315,16 @@ function Director({
     const cx = w / 2,
       cy = h / 2,
       coreR = (CORE_WORLD_RADIUS * compress) / worldPerPixel(cx, cy);
-    const rect = targetRef.current?.getBoundingClientRect();
+    // The "." slot only matters once the pinned closing has started (t > 0); before that no
+    // layout read is needed.
+    const rect = t > 0 ? targetRef.current?.getBoundingClientRect() : undefined;
     const dot =
       rect && rect.width > 0
-        ? { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2, r: rect.width * 0.52 }
+        ? Object.assign(s.dot, {
+            x: rect.left + rect.width / 2,
+            y: rect.top + rect.height / 2,
+            r: rect.width * 0.52,
+          })
         : null;
     const D = R ? (t >= 1 ? 1 : 0) : band(t, PHASE.dock[0], PHASE.dock[1]);
     let qx = cx,
@@ -402,20 +431,20 @@ function Director({
       );
       shared.fill.current.intensity = 16 * worldR * worldR * (1 - 0.6 * closingFade);
     }
-    const { panels, sys } = dom.current;
-    if (panels?.length && sys) {
-      const sysRect = sys.getBoundingClientRect(),
-        near = sysRect.bottom > -h * 0.3 && sysRect.top < h * 1.3;
-      if (near)
-        s.panelLight.update(
-          panels,
-          panels.map((panel) => panel.getBoundingClientRect()),
-          sx,
-          sy,
-          sr,
-          pres,
-          R ? 0.6 : 1 - E,
-        );
+    const { panels } = dom.current;
+    if (panels?.length && s.panelBoxes.length === panels.length) {
+      const y = scrollY,
+        near = s.sysBottom - y > -h * 0.3 && s.sysTop - y < h * 1.3;
+      if (near) {
+        s.panelBoxes.forEach((box, i) => {
+          const r = s.panelRects[i]!;
+          r.left = box.left;
+          r.right = box.left + box.width;
+          r.top = box.top - y;
+          r.bottom = box.top - y + box.height;
+        });
+        s.panelLight.update(panels, s.panelRects, sx, sy, sr, pres, R ? 0.6 : 1 - E);
+      }
     }
     shared.ornament.current = 1 - band(t, PHASE.ornament[0], PHASE.ornament[1]);
     shared.closing.current = t;
@@ -424,14 +453,20 @@ function Director({
     // ── Closing world presence: fades with entry, never toggles. ──
     const world = R ? E : band(entry, 0.25, 1);
     const presence = band(entry, 0.4, 1);
-    if (shared.rim.current)
-      shared.rim.current.uniforms["uGlow"]!.value =
+    // Additive layers with zero glow add nothing to the image: skip drawing them (the whole journey).
+    if (shared.rim.current) {
+      const glow =
         presence * (0.52 + 0.6 * suction * (1 - post) + 1.2 * impact + band(t, 0.68, 0.84) * 0.2);
-    if (shared.corona.current)
-      shared.corona.current.uniforms["uGlow"]!.value =
-        presence * (0.2 + 0.75 * suction * (1 - post) + 1.8 * impact);
+      shared.rim.current.uniforms["uGlow"]!.value = glow;
+      shared.rim.current.visible = glow > 0;
+    }
+    if (shared.corona.current) {
+      const glow = presence * (0.2 + 0.75 * suction * (1 - post) + 1.8 * impact);
+      shared.corona.current.uniforms["uGlow"]!.value = glow;
+      shared.corona.current.visible = glow > 0;
+    }
     shared.lights.current?.forEach((light, i) => {
-      if (light) light.intensity = CLOSING_LIGHTS[i]! * world;
+      if (light) light.intensity = JOURNEY_LIGHTS[i]! + CLOSING_LIGHTS[i]! * world;
     });
 
     // ── Signature DOM, driven by the same timeline. ──
@@ -448,19 +483,33 @@ function Director({
       if (mat.textContent !== text) mat.textContent = text;
     }
 
-    (window as Window & { __ppStage?: Stage }).__ppStage = {
-      scroll: S,
-      entry,
-      t,
-      exit,
-      dock: D,
-      docked,
-      core: { x: sx, y: sy, r: sr },
-      dot,
-      material: s.slot,
-      materialName,
-      reduced: R,
-    };
+    const stage = (s.stage ??= {
+      scroll: 0,
+      entry: 0,
+      t: 0,
+      exit: 0,
+      dock: 0,
+      docked: false,
+      core: { x: 0, y: 0, r: 0 },
+      dot: null,
+      material: 0,
+      materialName: "",
+      reduced: false,
+    });
+    stage.scroll = S;
+    stage.entry = entry;
+    stage.t = t;
+    stage.exit = exit;
+    stage.dock = D;
+    stage.docked = docked;
+    stage.core.x = sx;
+    stage.core.y = sy;
+    stage.core.r = sr;
+    stage.dot = dot;
+    stage.material = s.slot;
+    stage.materialName = materialName;
+    stage.reduced = R;
+    (window as Window & { __ppStage?: Stage }).__ppStage = stage;
     const perf = (window as Window & { __ppPerf?: { directorMs: number[] } }).__ppPerf;
     if (perf) perf.directorMs.push(performance.now() - perfStart);
   }, -1);
@@ -527,15 +576,13 @@ function JourneyScene({
       {perfEnabled() && <PerfProbe />}
       {reliefOn && shared.relief && <ReliefBackground uniforms={shared.relief} />}
       <ambientLight intensity={0.05} />
-      <spotLight position={[3, 6, 2]} angle={0.4} penumbra={1} intensity={60} color="#fff4e8" />
-      <spotLight position={[-4, 3, -3]} angle={0.5} penumbra={1} intensity={40} color="#9fb4ff" />
-      {/* Closing light rig (previously inside the convergence scene), faded in by the Director. */}
+      {/* Journey key/rim spots; the Director adds the closing rig's share to them (same lights). */}
       <spotLight
         ref={setLight(0)}
         position={[3, 6, 2]}
         angle={0.4}
         penumbra={1}
-        intensity={0}
+        intensity={JOURNEY_LIGHTS[0]}
         color="#fff4e8"
       />
       <spotLight
@@ -543,9 +590,10 @@ function JourneyScene({
         position={[-4, 3, -3]}
         angle={0.5}
         penumbra={1}
-        intensity={0}
+        intensity={JOURNEY_LIGHTS[1]}
         color="#9fb4ff"
       />
+      {/* Closing light rig (previously inside the convergence scene), faded in by the Director. */}
       <pointLight
         ref={setLight(2)}
         position={[0.4, -0.1, 2]}
@@ -619,7 +667,7 @@ function JourneyScene({
           />
         </mesh>
         <mesh scale={1.012}>
-          <sphereGeometry args={[1, 72, 72]} />
+          <sphereGeometry args={[1, seg(72), seg(72)]} />
           <shaderMaterial
             ref={shared.rim}
             uniforms={rimUniforms}
@@ -651,15 +699,34 @@ export function SiteV2Webgl({
     () => ({ alpha: true, antialias: true, toneMapping: THREE.ACESFilmicToneMapping }),
     [],
   );
+  // The relief pixels are generated in a worker; the canvas starts once they exist, so the
+  // environment map (rendered once) still reflects the relief.
+  const [reliefReady, setReliefReady] = useState(false);
+  useEffect(() => {
+    let alive = true;
+    reliefPixels.then(() => alive && setReliefReady(true));
+    return () => {
+      alive = false;
+    };
+  }, []);
+  if (!reliefReady) return null;
+  const quality = initialQuality();
   return (
     <Canvas
       className="site-v2-webgl-world"
-      dpr={Math.min(window.devicePixelRatio || 1, PROFILES[initialQuality()].dpr)}
+      dpr={Math.min(window.devicePixelRatio || 1, PROFILES[quality].dpr)}
       camera={{ position: [0, 0, 5.2], fov: 32 }}
       gl={gl}
-      onCreated={({ gl: renderer }) => renderer.setClearColor(0x000000, 0)}
+      // The canvas is position:fixed, so scrolling never moves it: no scroll listeners needed.
+      resize={{ scroll: false }}
+      onCreated={({ gl: renderer }) => {
+        renderer.setClearColor(0x000000, 0);
+        renderer.transmissionResolutionScale = PROFILES[quality].transmission;
+      }}
     >
       <JourneyScene root={root} targetRef={targetRef} reduced={reduced} />
     </Canvas>
   );
 }
+
+export default SiteV2Webgl;

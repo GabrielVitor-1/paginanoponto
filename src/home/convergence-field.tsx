@@ -7,6 +7,7 @@ import type { MutableRefObject } from "react";
 import * as THREE from "three";
 import { plasmaFrag, plasmaVert } from "./Morph";
 import { srgb } from "./site-v2-relief";
+import { geometryDetail, seg } from "./quality";
 
 type Family = "glass" | "mercury" | "plasma";
 const clamp = (value: number) => THREE.MathUtils.clamp(value, 0, 1);
@@ -159,7 +160,7 @@ function Fragment({
           </mesh>
         ) : family === "mercury" ? (
           <mesh>
-            <sphereGeometry args={[0.26, 64, 64]} />
+            <sphereGeometry args={[0.26, seg(64), seg(64)]} />
             <MeshDistortMaterial
               color="#f4f6f8"
               metalness={1}
@@ -171,7 +172,8 @@ function Fragment({
           </mesh>
         ) : (
           <mesh material={plasmaMaterial}>
-            <icosahedronGeometry args={[0.3, 4]} />
+            {/* Detail 4 on large screens; 3 where the fragment never exceeds a few dozen px. */}
+            <icosahedronGeometry args={[0.3, geometryDetail() < 0.6 ? 3 : 4]} />
           </mesh>
         )}
       </group>

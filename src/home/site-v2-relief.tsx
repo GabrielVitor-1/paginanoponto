@@ -4,6 +4,8 @@
 // no extra loop). The Director in site-v2-webgl.tsx writes its uniforms each frame.
 import { useEffect, useMemo } from "react";
 import * as THREE from "three";
+import { buildReliefData, RELIEF_SIZE } from "./relief-data";
+import type { ReliefData } from "./relief-data";
 
 /** All tuning in one place. Colours are sRGB 0..1; lengths in CSS px. */
 export const RELIEF = {
@@ -20,7 +22,7 @@ export const RELIEF = {
   trailPoints: 16,
 } as const;
 
-const SIZE = 512;
+const SIZE = RELIEF_SIZE;
 /** Raw sRGB triple (no colour-management conversion): these shaders write display values directly. */
 export const srgb = (hex: string) =>
   new THREE.Vector3(
@@ -29,106 +31,9 @@ export const srgb = (hex: string) =>
     parseInt(hex.slice(5, 7), 16) / 255,
   );
 
-/** Seamless (periodic) value noise → domain-warped ridged fbm. Generated once on the CPU. */
-function buildReliefTexture() {
-  const hash = (x: number, y: number, p: number) => {
-    x = ((x % p) + p) % p;
-    y = ((y % p) + p) % p;
-    const s = Math.sin(x * 127.1 + y * 311.7 + p * 17.3) * 43758.5453;
-    return s - Math.floor(s);
-  };
-  const noise = (x: number, y: number, p: number) => {
-    const ix = Math.floor(x),
-      iy = Math.floor(y),
-      fx = x - ix,
-      fy = y - iy,
-      ux = fx * fx * (3 - 2 * fx),
-      uy = fy * fy * (3 - 2 * fy);
-    const a = hash(ix, iy, p),
-      b = hash(ix + 1, iy, p),
-      c = hash(ix, iy + 1, p),
-      d = hash(ix + 1, iy + 1, p);
-    return a + (b - a) * ux + (c - a) * uy + (a - b - c + d) * ux * uy;
-  };
-  const fbm = (x: number, y: number, base: number, octaves: number, ridged: boolean) => {
-    let sum = 0,
-      amp = 0.5,
-      norm = 0,
-      period = base;
-    for (let o = 0; o < octaves; o++) {
-      let n = noise(x * period, y * period, period);
-      if (ridged) {
-        n = 1 - Math.abs(n * 2 - 1);
-        n *= n;
-      }
-      sum += n * amp;
-      norm += amp;
-      amp *= 0.5;
-      period *= 2;
-    }
-    return sum / norm;
-  };
-  const height = new Float32Array(SIZE * SIZE);
-  for (let j = 0; j < SIZE; j++)
-    for (let i = 0; i < SIZE; i++) {
-      const u = i / SIZE,
-        v = j / SIZE;
-      // Gravitational / fluvial warp: periodic offsets keep the tile seamless.
-      const wx = fbm(u, v, 3, 3, false) - 0.5,
-        wy = fbm(u + 0.37, v + 0.71, 3, 3, false) - 0.5;
-      const ridges = fbm(u + wx * 0.22, v + wy * 0.22, 4, 5, true);
-      const mass = fbm(u + wy * 0.1, v - wx * 0.1, 2, 3, false);
-      height[j * SIZE + i] = ridges * 0.72 + mass * 0.28;
-    }
-  // Curvature = height − local mean (crests > 0, cavities < 0). Separable periodic box blur.
-  const blur = (src: Float32Array, r: number) => {
-    const tmp = new Float32Array(src.length),
-      out = new Float32Array(src.length),
-      k = 1 / (2 * r + 1);
-    for (let j = 0; j < SIZE; j++)
-      for (let i = 0; i < SIZE; i++) {
-        let s = 0;
-        for (let o = -r; o <= r; o++) s += src[j * SIZE + ((i + o + SIZE) % SIZE)]!;
-        tmp[j * SIZE + i] = s * k;
-      }
-    for (let j = 0; j < SIZE; j++)
-      for (let i = 0; i < SIZE; i++) {
-        let s = 0;
-        for (let o = -r; o <= r; o++) s += tmp[((j + o + SIZE) % SIZE) * SIZE + i]!;
-        out[j * SIZE + i] = s * k;
-      }
-    return out;
-  };
-  const mean = blur(height, 7);
-  const data = new Uint8Array(SIZE * SIZE * 4),
-    at = (i: number, j: number) => height[((j + SIZE) % SIZE) * SIZE + ((i + SIZE) % SIZE)]!;
-  for (let j = 0; j < SIZE; j++)
-    for (let i = 0; i < SIZE; i++) {
-      const dx = (at(i + 1, j) - at(i - 1, j)) * 9,
-        dy = (at(i, j + 1) - at(i, j - 1)) * 9,
-        inv = 1 / Math.hypot(dx, dy, 1),
-        o = (j * SIZE + i) * 4;
-      data[o] = Math.round((-dx * inv * 0.5 + 0.5) * 255);
-      data[o + 1] = Math.round((-dy * inv * 0.5 + 0.5) * 255);
-      data[o + 2] = Math.round(THREE.MathUtils.clamp(at(i, j), 0, 1) * 255);
-      data[o + 3] = Math.round(
-        THREE.MathUtils.clamp((at(i, j) - mean[j * SIZE + i]!) * 4 + 0.5, 0, 1) * 255,
-      );
-    }
-  // Dark mineral albedo of the same surface, used inside the environment map so the sphere reflects it.
-  const albedo = new Uint8Array(SIZE * SIZE * 4);
-  for (let k = 0; k < SIZE * SIZE; k++) {
-    const v = THREE.MathUtils.clamp(
-      0.07 + height[k]! * 0.2 + (height[k]! - mean[k]!) * 0.9,
-      0,
-      0.45,
-    );
-    albedo[k * 4] = Math.round(v * 236);
-    albedo[k * 4 + 1] = Math.round(v * 246);
-    albedo[k * 4 + 2] = Math.round(v * 255);
-    albedo[k * 4 + 3] = 255;
-  }
-  const albedoTexture = new THREE.DataTexture(albedo, SIZE, SIZE, THREE.RGBAFormat);
+/** GPU textures from the relief pixels (built in a worker, see `loadReliefData`). */
+function buildReliefTexture(data: ReliefData) {
+  const albedoTexture = new THREE.DataTexture(data.albedo, SIZE, SIZE, THREE.RGBAFormat);
   albedoTexture.wrapS = albedoTexture.wrapT = THREE.RepeatWrapping;
   albedoTexture.repeat.set(4, 2);
   albedoTexture.colorSpace = THREE.SRGBColorSpace;
@@ -136,7 +41,7 @@ function buildReliefTexture() {
   albedoTexture.minFilter = THREE.LinearMipmapLinearFilter;
   albedoTexture.generateMipmaps = true;
   albedoTexture.needsUpdate = true;
-  const texture = new THREE.DataTexture(data, SIZE, SIZE, THREE.RGBAFormat);
+  const texture = new THREE.DataTexture(data.packed, SIZE, SIZE, THREE.RGBAFormat);
   texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
   texture.magFilter = THREE.LinearFilter;
   texture.minFilter = THREE.LinearMipmapLinearFilter;
@@ -146,9 +51,40 @@ function buildReliefTexture() {
   return { packed: texture, albedo: albedoTexture };
 }
 
+let reliefData: ReliefData | null = null;
+let loading: Promise<void> | null = null;
+/** Generates the relief pixels in a Web Worker so the main thread stays free while the page
+ *  loads. Falls back to the main thread where workers are unavailable. Resolves once ready. */
+export function loadReliefData(): Promise<void> {
+  if (reliefData) return Promise.resolve();
+  return (loading ??= new Promise<void>((resolve) => {
+    const fallback = () => {
+      reliefData ??= buildReliefData();
+      resolve();
+    };
+    try {
+      const worker = new Worker(new URL("./relief-worker.ts", import.meta.url), {
+        type: "module",
+      });
+      worker.onmessage = (event: MessageEvent<ReliefData>) => {
+        reliefData = event.data;
+        worker.terminate();
+        resolve();
+      };
+      worker.onerror = () => {
+        worker.terminate();
+        fallback();
+      };
+    } catch {
+      fallback();
+    }
+  }));
+}
+
 let cached: ReturnType<typeof buildReliefTexture> | null = null;
 /** Generated once per page and shared by the background plane and the environment map. */
-export const getReliefTextures = () => (cached ??= buildReliefTexture());
+export const getReliefTextures = () =>
+  (cached ??= buildReliefTexture((reliefData ??= buildReliefData())));
 
 const VERT = /* glsl */ `void main(){ gl_Position = vec4(position.xy * 2.0, 0.0, 1.0); }`;
 const FRAG = /* glsl */ `
