@@ -10,8 +10,10 @@ body {
   --am: #ff9a3c;
   --line: #2a2826;
   --tx: #c9c3b6;
-  --disp: "Big Shoulders Display", "Arial Narrow", impact, sans-serif;
-  --sans: inter, system-ui, sans-serif;
+  --disp:
+    "Big Shoulders Display", "Big Shoulders Fallback Arial", "Big Shoulders Fallback Roboto",
+    "Arial Narrow", impact, sans-serif;
+  --sans: inter, "Inter Fallback Arial", "Inter Fallback Roboto", system-ui, sans-serif;
 
   background: var(--bg);
   color: var(--iv);

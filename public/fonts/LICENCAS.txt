@@ -1,0 +1,6 @@
+Fontes servidas pelo próprio site (mesmos arquivos distribuídos pelo Google Fonts):
+
+- Inter — SIL Open Font License 1.1 — https://github.com/rsms/inter
+- Big Shoulders Display — SIL Open Font License 1.1 — https://github.com/xotypeco/big_shoulders
+
+Texto da licença: https://openfontlicense.org/open-font-license-official-text/
