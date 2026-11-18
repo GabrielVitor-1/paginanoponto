@@ -1,7 +1,7 @@
 # Release: SEO local + pré-renderização + fontes
 
 Branch `seo/local-integrado` · base publicada `352afd5` (tag `site-estavel-v1.0.0`) · preparado em 18/11/2026.
-**Status: pronto. Aguardando o link público do Perfil da Empresa e a confirmação de publicação.**
+**Status: publicação autorizada em 18/11/2026, sem o link do Perfil da Empresa.**
 
 ## Conteúdo do release (`git log 352afd5..HEAD`)
 
@@ -40,9 +40,9 @@ Lighthouse mobile (3 rodadas; a 1ª com servidor frio):
 
 ## Pendências antes de publicar
 
-1. **Link público do Perfil da Empresa** (fornecido por você): entra como `"sameAs": ["<link>"]` no nó `ProfessionalService` do JSON-LD. Não será inventado nem deduzido.
-2. **`public/sitemap.xml`**: atualizar `<lastmod>` para a data real da publicação.
-3. Sua confirmação de publicação.
+1. ~~Link público do Perfil da Empresa~~ **Adiado para uma atualização futura** (sem link público confiável ainda). Quando houver, entra como `"sameAs": ["<link>"]` no nó `ProfessionalService` do JSON-LD. Nunca usar link inventado, de pesquisa ou administrativo.
+2. ✅ `public/sitemap.xml`: `<lastmod>2026-11-18</lastmod>`.
+3. ✅ Publicação autorizada.
 
 ## Publicação (após a confirmação)
 
