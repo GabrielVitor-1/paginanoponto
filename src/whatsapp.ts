@@ -12,6 +12,8 @@ export const whatsappMessages = {
     "Olá! Tenho interesse no pacote Premium. Quero conversar sobre integrações, agendamento ou reservas e entender o valor do projeto.",
   cidade: "Olá! Quero conversar sobre uma página para o meu negócio. Minha cidade é ______.",
   escolha: `Olá! Vi a ${BRAND_NAME}. Meu negócio é ______ e quero conversar sobre uma página.`,
+  iniciar: `Olá! Vim pelo site da ${BRAND_NAME} e quero iniciar um projeto. Meu negócio é ______ e preciso de ______.`,
+  orcamento: `Olá! Vim pelo site da ${BRAND_NAME} e quero pedir um orçamento. O projeto é ______.`,
 } as const;
 
 export type WhatsAppMessage = keyof typeof whatsappMessages;

@@ -205,16 +205,10 @@ body {
   width: min(60%, 860px);
   margin: 0 0 18vh;
   text-decoration: none;
-  opacity: 0.5;
-  transition: opacity 0.5s;
 }
 
 .site-v2 .project.right {
   margin-left: auto;
-}
-
-.site-v2 .project.on {
-  opacity: 1;
 }
 
 .site-v2 .shot {
@@ -679,8 +673,7 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .site-v2 .tag,
   .site-v2 .mat,
-  .site-v2 .mark h2,
-  .site-v2 .project {
+  .site-v2 .mark h2 {
     transition: none;
   }
 }

@@ -32,6 +32,9 @@ const projects = [
   ],
 ];
 const whatsapp = linkWhats(whatsappMessages.geral);
+// Main commercial CTAs open the official WhatsApp directly, with a message for each intent.
+const whatsappStart = linkWhats(whatsappMessages.iniciar),
+  whatsappQuote = linkWhats(whatsappMessages.orcamento);
 
 // The 3D world (three.js, ~1 MB) is a separate chunk loaded after the page's own HTML is on
 // screen, so the content is readable and clickable before WebGL starts.
@@ -111,7 +114,7 @@ export function SiteV2() {
           <a className="btn p" href="#proj">
             Explorar projetos
           </a>
-          <a className="btn" href="#contato">
+          <a className="btn" href={whatsappStart} target="_blank" rel="noopener">
             Iniciar um projeto
           </a>
         </div>
@@ -140,7 +143,7 @@ export function SiteV2() {
         </h2>
         {projects.map(([image, title, text, color, url, position], i) => (
           <a
-            className={`project ${i === 1 ? "right" : ""} ${i === 0 ? "on" : ""}`}
+            className={i === 1 ? "project right" : "project"}
             href={url}
             target="_blank"
             rel="noopener"
@@ -219,7 +222,7 @@ export function SiteV2() {
             ))}
           </ol>
           <div className="btns">
-            <a className="btn p" href="#contato">
+            <a className="btn p" href={whatsappQuote} target="_blank" rel="noopener">
               Pedir orçamento
             </a>
           </div>
