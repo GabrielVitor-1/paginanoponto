@@ -9,6 +9,7 @@
       content="Criamos sites, sistemas e experiências digitais que transformam ideias em soluções reais."
     />
     <link rel="canonical" href="https://paginaponto.com.br/" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
     <meta name="theme-color" content="#070707" />
     <meta name="color-scheme" content="dark" />
 
@@ -189,24 +190,67 @@
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
-        "@type": "ProfessionalService",
-        "name": "Página Ponto",
-        "slogan": "Tudo num só ponto.",
-        "url": "https://paginaponto.com.br/",
-        "logo": "https://paginaponto.com.br/icon-512.png",
-        "image": "https://paginaponto.com.br/compartilhamento-pagina-ponto.jpg",
-        "description": "Criamos sites, sistemas e experiências digitais que transformam ideias em soluções reais.",
-        "email": "mailto:contato@paginaponto.com.br",
-        "telephone": "+55 34 99886-1525",
-        "contactPoint": {
-          "@type": "ContactPoint",
-          "contactType": "sales",
-          "telephone": "+55 34 99886-1525",
-          "email": "contato@paginaponto.com.br",
-          "url": "https://wa.me/5534998861525",
-          "availableLanguage": "pt-BR"
-        },
-        "founder": { "@type": "Person", "name": "Gabriel Vitor" }
+        "@graph": [
+          {
+            "@type": "WebSite",
+            "@id": "https://paginaponto.com.br/#website",
+            "url": "https://paginaponto.com.br/",
+            "name": "Página Ponto",
+            "inLanguage": "pt-BR",
+            "publisher": { "@id": "https://paginaponto.com.br/#empresa" }
+          },
+          {
+            "@type": "ProfessionalService",
+            "@id": "https://paginaponto.com.br/#empresa",
+            "name": "Página Ponto",
+            "slogan": "Tudo num só ponto.",
+            "url": "https://paginaponto.com.br/",
+            "logo": "https://paginaponto.com.br/icon-512.png",
+            "image": "https://paginaponto.com.br/compartilhamento-pagina-ponto.jpg",
+            "description": "Criamos sites, sistemas e experiências digitais que transformam ideias em soluções reais.",
+            "email": "contato@paginaponto.com.br",
+            "telephone": "+55 34 99886-1525",
+            "contactPoint": {
+              "@type": "ContactPoint",
+              "contactType": "sales",
+              "telephone": "+55 34 99886-1525",
+              "email": "contato@paginaponto.com.br",
+              "url": "https://wa.me/5534998861525",
+              "availableLanguage": "pt-BR"
+            },
+            "founder": { "@type": "Person", "name": "Gabriel Vitor" },
+            "hasOfferCatalog": {
+              "@type": "OfferCatalog",
+              "name": "Serviços",
+              "itemListElement": [
+                {
+                  "@type": "Offer",
+                  "itemOffered": { "@type": "Service", "name": "Sites institucionais" }
+                },
+                {
+                  "@type": "Offer",
+                  "itemOffered": { "@type": "Service", "name": "Landing pages" }
+                },
+                {
+                  "@type": "Offer",
+                  "itemOffered": { "@type": "Service", "name": "Experiências interativas" }
+                },
+                {
+                  "@type": "Offer",
+                  "itemOffered": { "@type": "Service", "name": "Identidade digital na web" }
+                },
+                {
+                  "@type": "Offer",
+                  "itemOffered": { "@type": "Service", "name": "Sistemas sob medida" }
+                },
+                {
+                  "@type": "Offer",
+                  "itemOffered": { "@type": "Service", "name": "Automação de processos" }
+                }
+              ]
+            }
+          }
+        ]
       }
     </script>
     <script type="module" src="/src/home/main.tsx"></script>
