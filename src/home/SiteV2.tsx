@@ -240,6 +240,13 @@ export function SiteV2() {
             <summary>Posso só automatizar um processo?</summary>
             <p>Sim. Automações e integrações podem ser contratadas à parte.</p>
           </details>
+          <details>
+            <summary>Vocês atendem fora de Pirenópolis?</summary>
+            <p>
+              Sim. Fazemos reuniões presenciais em Pirenópolis e região e atendemos empresas de todo
+              o Brasil de forma remota.
+            </p>
+          </details>
         </div>
       </section>
       <section id="conv" aria-label="Assinatura Página Ponto">
@@ -278,6 +285,9 @@ export function SiteV2() {
             <img src="./whatsapp-glyph-official-2026.png" alt="" width={22} height={22} />
             WhatsApp
           </a>
+          <p className="area">
+            Atendimento presencial em Pirenópolis e região · remoto em todo o Brasil.
+          </p>
         </div>
         <div>
           <h4>Navegação</h4>
