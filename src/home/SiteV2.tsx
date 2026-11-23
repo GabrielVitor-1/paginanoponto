@@ -9,7 +9,7 @@ const projects = [
   [
     "dora-doces",
     "Dora Doces",
-    "Catálogo digital e navegação pensada para escolher sabores.",
+    "Presença digital com um catálogo completo, reunindo centenas de produtos num só lugar.",
     "#f2b37a",
     "https://doradoces.com.br",
     "center",
@@ -17,7 +17,7 @@ const projects = [
   [
     "chacaras-morro-grande",
     "Chácaras Morro Grande",
-    "Apresentação das hospedagens e consulta de disponibilidade pelo WhatsApp.",
+    "Várias hospedagens num só site, cada uma com sua página e consulta direta pelo WhatsApp.",
     "#d8b25c",
     "https://chacarasmorrogrande.com.br",
     "center top",
@@ -25,7 +25,7 @@ const projects = [
   [
     "nexbr",
     "Nexbr",
-    "Site de gráfica rápida e comunicação visual em Uberlândia-MG, com catálogo de serviços e pedido de orçamento pelo WhatsApp.",
+    "Serviços da gráfica bem apresentados e pedido de orçamento direto pelo WhatsApp.",
     "#ff5c25",
     "https://nexbr.vercel.app",
     "center top",
@@ -108,7 +108,8 @@ export function SiteV2() {
       <header id="hero" className="sec">
         <h1 data-r>Ideias que ganham forma.</h1>
         <p className="lead">
-          Criamos sites, sistemas e experiências digitais que transformam ideias em soluções reais.
+          Site, sistema ou automação: primeiro entendemos o que trava o seu negócio, depois
+          construímos o que resolve.
         </p>
         <div className="btns">
           <a className="btn p" href="#proj">
@@ -121,13 +122,13 @@ export function SiteV2() {
       </header>
       <section id="svc" className="sec">
         <div className="svc-in">
-          <h2 data-r>Sites que mostram o que você faz</h2>
+          <h2 data-r>Presença que trabalha por você</h2>
           <div className="its">
             {[
               ["Sites institucionais", "Apresentam o negócio com clareza e levam ao contato."],
-              ["Landing pages", "Uma página, uma ação, feita para converter."],
+              ["Landing pages", "Uma página, um objetivo, nenhuma distração."],
               ["Experiências interativas", "Movimento e interação a serviço da mensagem."],
-              ["Identidade digital na web", "Sua marca aplicada com consistência em cada tela."],
+              ["Catálogos digitais", "Produtos e serviços organizados para escolher e pedir."],
             ].map(([title, text]) => (
               <div className="it" data-r key={title}>
                 <h3>{title}</h3>
@@ -187,16 +188,16 @@ export function SiteV2() {
       <section id="sys" className="sec">
         <h2 data-r>Sistemas sob medida</h2>
         <p className="lead">
-          Processos, clientes e dados reunidos num só ponto — num sistema feito para o seu negócio
-          crescer.
+          Ferramentas para organizar pedidos, reservas e processos do jeito que o seu negócio
+          trabalha.
         </p>
         <div className="pans">
           {[
             ["Sistemas personalizados", "Cada regra do seu processo, no lugar certo."],
             ["Plataformas digitais", "Área de clientes, painéis e catálogos."],
-            ["Aplicações web", "Rodam no navegador, em qualquer dispositivo."],
+            ["Aplicações web", "Acesse do celular ou do computador, sem instalar nada."],
             ["Ferramentas internas", "Menos planilha solta, mais controle."],
-            ["Soluções sob medida", "Conte o problema e desenhamos o caminho."],
+            ["Projetos especiais", "Conte o problema e desenhamos o caminho."],
           ].map(([title, text]) => (
             <div className="pan" key={title}>
               <h3>{title}</h3>
@@ -210,10 +211,10 @@ export function SiteV2() {
           <h2 data-r>Como trabalhamos</h2>
           <ol>
             {[
-              ["Conversa", "Entendemos o negócio e o objetivo do projeto."],
+              ["Conversa", "Entendemos o negócio e o desafio a resolver."],
               ["Proposta", "Escopo, prazo e valor combinados antes de começar."],
               ["Criação", "Você acompanha e aprova cada etapa."],
-              ["Entrega", "Site ou sistema no ar, com suporte para os ajustes."],
+              ["Entrega", "Solução funcionando, com suporte para os ajustes."],
             ].map(([title, text]) => (
               <li key={title}>
                 <b>{title}</b>
@@ -229,7 +230,7 @@ export function SiteV2() {
         </div>
         <div className="faq">
           <details>
-            <summary>Quanto custa um site?</summary>
+            <summary>Quanto custa um projeto?</summary>
             <p>Depende do escopo. Descreva o que precisa e enviamos uma proposta.</p>
           </details>
           <details>
@@ -239,13 +240,6 @@ export function SiteV2() {
           <details>
             <summary>Posso só automatizar um processo?</summary>
             <p>Sim. Automações e integrações podem ser contratadas à parte.</p>
-          </details>
-          <details>
-            <summary>Vocês atendem fora de Pirenópolis?</summary>
-            <p>
-              Sim. Fazemos reuniões presenciais em Pirenópolis e região e atendemos empresas de todo
-              o Brasil de forma remota.
-            </p>
           </details>
         </div>
       </section>
@@ -268,9 +262,9 @@ export function SiteV2() {
       <footer id="contato">
         <div>
           <p className="big">
-            Vamos tirar
+            Qual desafio
             <br />
-            sua ideia do papel?
+            vamos resolver?
           </p>
           <a href="mailto:contato@paginaponto.com.br" style={{ color: "var(--am)", marginTop: 16 }}>
             contato@paginaponto.com.br
@@ -285,9 +279,7 @@ export function SiteV2() {
             <img src="./whatsapp-glyph-official-2026.png" alt="" width={22} height={22} />
             WhatsApp
           </a>
-          <p className="area">
-            Atendimento presencial em Pirenópolis e região · remoto em todo o Brasil.
-          </p>
+          <p className="area">Atendimento presencial ou on-line, onde a sua empresa estiver.</p>
         </div>
         <div>
           <h4>Navegação</h4>
