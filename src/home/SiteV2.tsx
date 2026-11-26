@@ -300,6 +300,9 @@ export function SiteV2() {
           <button data-reduced type="button" aria-pressed="false">
             Movimento reduzido
           </button>
+          <button data-consent type="button">
+            Privacidade e cookies
+          </button>
         </div>
         <small>© 2026 Página Ponto. Todos os direitos reservados.</small>
       </footer>

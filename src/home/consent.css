@@ -1,0 +1,57 @@
+.pp-consent {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  left: 16px;
+  z-index: 40;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px 20px;
+  align-items: center;
+  max-width: 620px;
+  margin-inline: auto;
+  padding: 18px 20px;
+  border: 1px solid #2a2826;
+  border-radius: 18px;
+  background: rgb(7 7 7 / 94%);
+  backdrop-filter: blur(8px);
+  color: #c9c3b6;
+  font:
+    400 14px/1.55 inter,
+    "Inter Fallback Arial",
+    "Inter Fallback Roboto",
+    system-ui,
+    sans-serif;
+}
+
+.pp-consent p {
+  flex: 1 1 280px;
+  margin: 0;
+}
+
+.pp-consent div {
+  display: flex;
+  gap: 10px;
+}
+
+.pp-consent button {
+  padding: 10px 20px;
+  border: 1px solid #f1ebdd;
+  border-radius: 99px;
+  background: transparent;
+  color: #f1ebdd;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.pp-consent button[data-choice="granted"] {
+  border-color: #ff9a3c;
+  background: #ff9a3c;
+  color: #070707;
+}
+
+.pp-consent button:focus-visible {
+  outline: 2px solid #ff9a3c;
+  outline-offset: 3px;
+}
