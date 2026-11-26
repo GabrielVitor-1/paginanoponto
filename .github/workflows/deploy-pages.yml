@@ -29,6 +29,8 @@ jobs:
         run: npm ci
       - name: Validate and build
         run: npm run check
+        env:
+          VITE_GA_ID: ${{ vars.VITE_GA_ID }}
       - name: Configure Pages
         uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5
       - name: Upload Pages artifact

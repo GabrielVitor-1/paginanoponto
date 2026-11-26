@@ -1,3 +1,4 @@
+import "../analytics";
 import { createRoot, hydrateRoot } from "react-dom/client";
 import { SiteV2 } from "./SiteV2";
 
