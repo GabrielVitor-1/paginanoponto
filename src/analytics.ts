@@ -45,6 +45,8 @@ let banner: HTMLElement | null = null;
 const applyChoice = (choice: Choice) => {
   saveChoice(choice);
   window.gtag("consent", "update", { analytics_storage: choice });
+  // The page_view sent on load was cookieless; count this visit now instead of on the next load.
+  if (choice === "granted") window.gtag("event", "page_view");
   if (choice === "denied") clearGaCookies();
 };
 
